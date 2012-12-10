@@ -4,6 +4,7 @@
  * 
  * @author sodomka
  * 
+ * Original header:
  * Applet for calculating Nash equilibria for two-person bimatrix game. 
  * Copyright (c) Junling Hu and Yilian Zhang, 2001 
  * This is an Applet that allows an user to enter the payoff matrices, the then caculated possible Nash equilibria for the bimatrix game. 
@@ -73,27 +74,9 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 			System.err.println("Bimatrix solver being used for " + numPlayers + " player game.");
 		}
 		
-		// Get list of player actions.
-		List<A> player1Actions = normalFormGame.getPossibleActionsForPlayer(player1Idx);
-		List<A> player2Actions = normalFormGame.getPossibleActionsForPlayer(player2Idx);
-		int numPlayer1Actions = player1Actions.size();
-		int numPlayer2Actions = player2Actions.size();
+		player1Payoffs = getPayoffMatrixForPlayer(normalFormGame, player1Idx);
+		player2Payoffs = getPayoffMatrixForPlayer(normalFormGame, player2Idx);
 		
-		// Create payoff matrix.
-		player1Payoffs = new double[numPlayer1Actions][numPlayer2Actions];
-		player2Payoffs = new double[numPlayer1Actions][numPlayer2Actions];
-		for (int player1ActionIndex=0; player1ActionIndex<numPlayer1Actions; player1ActionIndex++) {
-			for (int player2ActionIndex=0; player2ActionIndex<numPlayer2Actions; player2ActionIndex++) {
-				A player1Action = player1Actions.get(player1ActionIndex);
-				A player2Action = player2Actions.get(player2ActionIndex);
-				Joint<A> jointAction = new Joint<A>();
-				jointAction.add(player1Action);
-				jointAction.add(player2Action);
-				Joint<Double> payoffsPerPlayer = normalFormGame.getPayoffsForJointAction(jointAction);
-				player1Payoffs[player1ActionIndex][player2ActionIndex] = payoffsPerPlayer.get(player1Idx); 
-				player2Payoffs[player1ActionIndex][player2ActionIndex] = payoffsPerPlayer.get(player2Idx);			}
-		}
-				
 		// Set other variables defined elsewhere.
 		row = player1Payoffs.length;
 		col = player1Payoffs[0].length;
@@ -105,9 +88,25 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		
 		// Convert solution out of the Z matrix.
 		// Return the joint strategy.
-		DiscreteDistribution<Joint<A>> jointStrategy = new DiscreteDistribution<Joint<A>>();
 		double[] player1StrategyArr = getEquilibriumStrategyForPlayer(player1Idx);
 		double[] player2StrategyArr = getEquilibriumStrategyForPlayer(player2Idx);
+		DiscreteDistribution<Joint<A>> jointStrategy = getJointStrategyFromIndependentStrategies(normalFormGame, player1StrategyArr, player2StrategyArr);
+		
+		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy);
+		return solution;
+	}
+
+	
+	public static <A extends AbstractAction> DiscreteDistribution<Joint<A>> getJointStrategyFromIndependentStrategies(
+			NormalFormGame<A> normalFormGame,
+			double[] player1StrategyArr, double[] player2StrategyArr) {
+		// Get list of player actions.
+		List<A> player1Actions = normalFormGame.getPossibleActionsForPlayer(player1Idx);
+		List<A> player2Actions = normalFormGame.getPossibleActionsForPlayer(player2Idx);
+		int numPlayer1Actions = player1Actions.size();
+		int numPlayer2Actions = player2Actions.size();
+
+		DiscreteDistribution<Joint<A>> jointStrategy = new DiscreteDistribution<Joint<A>>();
 		for (int player1ActionIndex=0; player1ActionIndex<numPlayer1Actions; player1ActionIndex++) {		
 			for (int player2ActionIndex=0; player2ActionIndex<numPlayer2Actions; player2ActionIndex++) {
 				double probAction1 = player1StrategyArr[player1ActionIndex];
@@ -120,31 +119,57 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 				jointStrategy.add(jointAction, probAction1*probAction2);
 			}
 		}
+
+		// TODO Auto-generated method stub
+		return jointStrategy;
+	}
+
+
+	public static <A extends AbstractAction> double[][] getPayoffMatrixForPlayer(
+			NormalFormGame<A> normalFormGame, int playerIdx) {
 		
-		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy);
-		return solution;
-	}
-
-	
-	public double[] getEquilibriumStrategyForPlayer(int playerIdx) {
-		int equilibriumIdxToConsider = 0; // always consider the first equilibrium found.
-		double[] eqmStrategyForPlayer = null;
-		if (playerIdx==0) {
-			eqmStrategyForPlayer = new double[row];
-			for (int actionIdx=0; actionIdx<row; actionIdx++) {
-				eqmStrategyForPlayer[actionIdx] = Z[equilibriumIdxToConsider][actionIdx];
-			}
-		} else if (playerIdx==1) {
-			eqmStrategyForPlayer = new double[col];
-			for (int actionIdx=0; actionIdx<col; actionIdx++) {
-				eqmStrategyForPlayer[actionIdx] = Z[equilibriumIdxToConsider][row+actionIdx];
-			}
+		// Get list of player actions.
+		List<A> player1Actions = normalFormGame.getPossibleActionsForPlayer(player1Idx);
+		List<A> player2Actions = normalFormGame.getPossibleActionsForPlayer(player2Idx);
+		int numPlayer1Actions = player1Actions.size();
+		int numPlayer2Actions = player2Actions.size();
+		
+		// Create payoff matrix.
+		double[][] payoffsForPlayer = new double[numPlayer1Actions][numPlayer2Actions];
+		for (int player1ActionIndex=0; player1ActionIndex<numPlayer1Actions; player1ActionIndex++) {
+			for (int player2ActionIndex=0; player2ActionIndex<numPlayer2Actions; player2ActionIndex++) {
+				A player1Action = player1Actions.get(player1ActionIndex);
+				A player2Action = player2Actions.get(player2ActionIndex);
+				Joint<A> jointAction = new Joint<A>();
+				jointAction.add(player1Action);
+				jointAction.add(player2Action);
+				Joint<Double> payoffsPerPlayer = normalFormGame.getPayoffsForJointAction(jointAction);
+				payoffsForPlayer[player1ActionIndex][player2ActionIndex] = payoffsPerPlayer.get(playerIdx);
+			}				
 		}
-		return eqmStrategyForPlayer;
+		return payoffsForPlayer;
 	}
 
+
+//	public double[] getEquilibriumStrategyForPlayer(int playerIdx) {
+//		int equilibriumIdxToConsider = 0; // always consider the first equilibrium found.
+//		double[] eqmStrategyForPlayer = null;
+//		if (playerIdx==0) {
+//			eqmStrategyForPlayer = new double[row];
+//			for (int actionIdx=0; actionIdx<row; actionIdx++) {
+//				eqmStrategyForPlayer[actionIdx] = Z[equilibriumIdxToConsider][actionIdx];
+//			}
+//		} else if (playerIdx==1) {
+//			eqmStrategyForPlayer = new double[col];
+//			for (int actionIdx=0; actionIdx<col; actionIdx++) {
+//				eqmStrategyForPlayer[actionIdx] = Z[equilibriumIdxToConsider][row+actionIdx];
+//			}
+//		}
+//		return eqmStrategyForPlayer;
+//	}
+
 	
-    public void AllClear(int WList[][],int ZList[][],double Q[],double LZ[][],int k){
+    private static void AllClear(int WList[][],int ZList[][],double Q[],double LZ[][],int k, int dimM){
 		// Define index matrix WList and ZList,Q
 	
 		for (int i=0;i<dimM;i++){
@@ -155,7 +180,43 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		}
     }
 	
-    public void getnash(double A[][] , double B[][],double Z[][]){
+    
+	public static Joint<double[]> solveForMixedStrategies(
+			double[][] player1Payoffs,
+			double[][] player2Payoffs) {
+		// TODO Auto-generated method stub
+		int numPlayer1Actions = player1Payoffs.length; // row
+		int numPlayer2Actions = player2Payoffs[0].length; // col
+		int numTotalActions = numPlayer1Actions + numPlayer2Actions; // dimM
+		
+		// Each row is a different equilibrium strategy. Each column gives the probability of 
+		// player 1 playing each of its actions, followed by the probability of player 2 playing 
+		// each of its actions.
+		double[][] equilibriumMixedStrategies = new double[numPlayer1Actions][numTotalActions]; 
+		getnash(player1Payoffs, player2Payoffs, equilibriumMixedStrategies, numPlayer1Actions, numPlayer2Actions, numTotalActions);
+		
+		// Get the equilibrium strategies for the two players
+		int equilibriumIdxToConsider = 0; // always consider the first equilibrium found.
+		double[] eqmStrategyForPlayer1 = new double[numPlayer1Actions];
+		for (int actionIdx=0; actionIdx<numPlayer1Actions; actionIdx++) {
+			eqmStrategyForPlayer1[actionIdx] = equilibriumMixedStrategies[equilibriumIdxToConsider][actionIdx];
+		}
+		double[] eqmStrategyForPlayer2 = new double[numPlayer2Actions];
+		for (int actionIdx=0; actionIdx<numPlayer2Actions; actionIdx++) {
+			eqmStrategyForPlayer2[actionIdx] = equilibriumMixedStrategies[equilibriumIdxToConsider][numPlayer1Actions+actionIdx];
+		}
+		
+		Joint<double[]> mixedStrategies = new Joint<double[]>();
+		mixedStrategies.add(eqmStrategyForPlayer1);
+		mixedStrategies.add(eqmStrategyForPlayer2);
+		return mixedStrategies;
+	}
+	
+	
+	
+	
+    
+    public static void getnash(double A[][] , double B[][],double Z[][], int row, int col, int dimM){
 		
 		double LA[][];
 		double LB[][];
@@ -184,73 +245,73 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		
 		/* find more than one Nash equilibrium solution*/
 		for(int k = 0;k<row;k++){
-			AllClear(WList,ZList,Q,LZ,k);    // initialize 
-			Comp(LA,LB,M);
+			AllClear(WList,ZList,Q,LZ,k,dimM);    // initialize 
+			Comp(LA,LB,M,row,col,dimM);
 			
-			getonenash(M,Q,WList,ZList,k,LA,LB,LZ); // get one nash solution
+			getonenash(M,Q,WList,ZList,k,LA,LB,LZ,row,col,dimM); // get one nash solution
 			Multiple1(LZ,Z,dimM,1,k);
 		}
 		//QMprint(LB,row,col);
 	}
 	
-	public void getonenash(double M[][],double Q[],int WList[][],int ZList[][],int k, double LA[][],double LB[][], double LZ[][]){
+	public static void getonenash(double M[][],double Q[],int WList[][],int ZList[][],int k, double LA[][],double LB[][], double LZ[][], int row, int col, int dimM){
 		int c=0,r=0,j1;	
 		int oldWList[][];
 		oldWList = new int[dimM][2];
 	 		
 		// find c be the best action agent 2 can take
-		c=find_min_col(LB,k);
+		c=find_min_col(LB,k,col);
 		
 		// Pivot get new q, M and exchange-elements
 		//QMprint(M,dimM,dimM);
-		Pivot(Q,M,c+row,k);	    
+		Pivot(Q,M,c+row,k,dimM);	    
 		Exchange_element(WList,ZList,c+row,k);
 		
 		//if(k==0) QMprint(M,dimM,dimM);
 		// find r is the best action agent 1 can take against c
-		r = find_min_row(LA,c);		
+		r = find_min_row(LA,c,row);		
 	
 		//Pivot get new q, M and exchange-elements
-		Pivot(Q,M,r,c+row); 
+		Pivot(Q,M,r,c+row,dimM); 
 		Exchange_element(WList,ZList,r,c+row);
 		//if(k==2) QMprint(M,dimM,dimM);
 		//System.out.print("c=" +c +"r="+r+"\n");
 		// get Z for k
 		if (r==k){  // we have the solution
-			get_final_z(WList,Q,LZ,k);
+			get_final_z(WList,Q,LZ,k,dimM);
 		}
 		else{
-			j1 = find_min_ratio(Q,M,r);
+			j1 = find_min_ratio(Q,M,r,dimM);
 			//System.out.println("j1="+j1);
 			if(j1==-1) {              //we find the solution
-				get_final_z(WList,Q,LZ,k);
+				get_final_z(WList,Q,LZ,k,dimM);
 			}
 			else{
 				// get to original step 
-				Pivot(Q,M,j1,r);
+				Pivot(Q,M,j1,r,dimM);
 				if (k==2) QMprint(M,dimM,dimM);
 				while(j1!=-1&&WList[j1][1]!=k){
 					
 					//copy Wlist to oldWlist
 					Multiple2(WList,oldWList,dimM,2,1);  
 					Exchange_element(WList,ZList, j1,r);
-					r = find_complement(j1,oldWList,ZList);
+					r = find_complement(j1,oldWList,ZList,dimM);
 					
 					// go back to step 1. r is the new driving variable
-					j1 = find_min_ratio(Q,M,r); 
-					if ( j1!=-1) { Pivot(Q,M,j1,r);
+					j1 = find_min_ratio(Q,M,r,dimM); 
+					if ( j1!=-1) { Pivot(Q,M,j1,r,dimM);
 					}
 					//System.out.print(j1);
 				}
 				if(j1!=-1 ) Exchange_element(WList,ZList,j1,r);
-				get_final_z(WList,Q,LZ,k);
+				get_final_z(WList,Q,LZ,k,dimM);
 			}
 		}	   
-		normalize(LZ,k);
+		normalize(LZ,k,row,dimM);
     }
 	
     // calculate  A1 = alpha * A0 , scalar multiplication
-    public void Multiple2(double A0[][], double A1[][],int s,int t,double p){
+    public static void Multiple2(double A0[][], double A1[][],int s,int t,double p){
 		
 		for (int i=0;i<s;i++){
 			for (int j=0;j<t;j++){
@@ -260,7 +321,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 	
 	// calculate  A1 = alpha * A0 , scalar multiply, A0 and A1 are integers
-	public void Multiple2(int A0[][], int A1[][],int s,int t,int prod){
+	public static void Multiple2(int A0[][], int A1[][],int s,int t,int prod){
 		
 		for (int i=0;i<s;i++){
 			for (int j=0;j<t;j++){
@@ -270,7 +331,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 	
     // calculate  A1[k] = alpha * A0[k], scalar multiply on one row
-    public void Multiple1(double A0[][], double A1[][],int t,double product,int k)
+    public static void Multiple1(double A0[][], double A1[][],int t,double product,int k)
     {
 		for (int i=0;i<t;i++){ 
 			A1[k][i] = product*A0[k][i];
@@ -278,10 +339,10 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
     
 	// construct the M matrix
-    public void Comp(double A0[][],double A1[][],double M1[][]){
+    public static void Comp(double A0[][],double A1[][],double M1[][], int row, int col, int dimM){
 		// want M be a positive matrix at the beginning
 		double MaxA,MaxB;
-		MaxA = find_abs_max(A0);MaxB = find_abs_max(A1); 
+		MaxA = find_abs_max(A0, row, col);MaxB = find_abs_max(A1, row, col); 
 				
 		for (int i=0;i<dimM;i++){
 			for (int j=0;j<dimM;j++){
@@ -300,7 +361,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 	
 	// find the absolute maxium of Matrix A0
-    public double find_abs_max(double A0[][]){
+    public static double find_abs_max(double A0[][], int row, int col){
 		double Max=0;
 		double temp;
 		
@@ -313,7 +374,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		return Max;
 	}
 	
-	public int find_min_col(double L1[][],int k){
+	public static int find_min_col(double L1[][],int k, int col){
 		double min = 200000;
 		int c=0;
    	    for(int j=0;j<col;j++){
@@ -325,7 +386,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		return c;
 	}
 	
-	public int find_min_row(double L1[][],int c){
+	public static int find_min_row(double L1[][],int c, int row){
 		double min = 200000;
 		int r=0;
 		for(int i=0;i<row;i++){
@@ -337,7 +398,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		return r;
 	}
 	
-	public void Pivot(double Q1[],double M1[][], int r1, int c1){
+	public static void Pivot(double Q1[],double M1[][], int r1, int c1, int dimM){
 		
 		double pPoint ;
 		double MLocal[][];
@@ -371,7 +432,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 	
 	//exchange rth row of WList and cth row of ZList 
-    public void  Exchange_element(int WList1[][],int ZList1[][],int r,int c){
+    public static void  Exchange_element(int WList1[][],int ZList1[][],int r,int c){
 		int temp1,temp2;	
 		temp1 = WList1[r][0]; temp2  = WList1[r][1];
 		WList1[r][0]= ZList1[c][0]; WList1[r][1]=ZList1[c][1];
@@ -379,7 +440,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 
 	// This function is modified, get the final solution
-    public void  get_final_z(int WList1[][],double Q1[],double Z1[][],int k){
+    public static void  get_final_z(int WList1[][],double Q1[],double Z1[][],int k, int dimM){
 		
 		int j;
 		for (int i=0;i<dimM;i++){
@@ -389,7 +450,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 	
 	// minumum ratio test
-    public int find_min_ratio(double Q1[],double M1[][], int r){
+    public static int find_min_ratio(double Q1[],double M1[][], int r, int dimM){
 		double min;
 		double R[];
 		int j=-1;
@@ -411,7 +472,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 	
 	// returns the position index of the complement of Wlistj in Zlist 
-    public int find_complement(int j,int WList1[][],int ZList1[][]){
+    public static int find_complement(int j,int WList1[][],int ZList1[][], int dimM){
 		int l = -1;
 		int temp1,temp2;
 		
@@ -430,7 +491,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 
 
-    public void QMprint(double M[][],int row,int col){
+    public static void QMprint(double M[][],int row,int col){
 //		for (int i=0;i<row;i++){
 //			for (int j=0;j<col;j++){
 //				System.out.print(M[i][j]+" ");
@@ -440,7 +501,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 //		}
     }
 	
-	public void QMprint(int M[][],int row,int col){
+	public static void QMprint(int M[][],int row,int col){
 //		for (int i=0;i<row;i++){
 //			for (int j=0;j<col;j++){
 //				System.out.print(M[i][j]+" ");
@@ -451,7 +512,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     }
 	
 	
-    public void normalize(double LZ1[][],int k) {
+    public static void normalize(double LZ1[][],int k, int row, int dimM) {
 		double sum1=0 ,sum2 = 0;
 		for (int i=0;i<row;i++)
 			sum1 = sum1+ Math.abs(LZ1[k][i]);
@@ -462,4 +523,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 			else  LZ1[k][i]= Math.abs(LZ1[k][i])/sum2;
 		}
     }
+
+
+
 }

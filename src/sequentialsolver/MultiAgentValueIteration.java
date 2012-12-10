@@ -74,6 +74,8 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 	}
 	
 	public JointPolicy<S,A> generatePolicy(SequentialGame<S,A> sequentialGame) {
+		
+		// Initialize value function.
 		int numPlayers = sequentialGame.getNumPlayers();
 		Joint<Double> zeros = new Joint<Double>();
 		for (int playerIdx=0; playerIdx<numPlayers; playerIdx++) {

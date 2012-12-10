@@ -44,7 +44,7 @@ public class GridGame implements SequentialGame<GridState, GridAction> {
 	 * @param numPlayers
 	 * @return
 	 */
-	private static List<GridState> computePossibleStates(Board staticBoard, int numPlayers) {
+	private static List<GridState> computePossibleStates(Board staticBoard, int numPlayers) {		
 		// If the board is static, a state only consists of different player positions.
 		// Get list of every possible position.
 		List<Position> occupiablePositions = staticBoard.getOccupiablePositions();
