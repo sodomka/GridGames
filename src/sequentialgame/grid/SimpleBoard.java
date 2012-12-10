@@ -1,10 +1,13 @@
 package sequentialgame.grid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import props.DiscreteDistribution;
 import props.Joint;
+import utils.FileUtils;
 
 /**
  * An implementation of a simple rectangular board.
@@ -25,10 +28,14 @@ public class SimpleBoard implements Board {
 	/**
 	 * The board dimensions.
 	 */
-	private int numXLocations;
-	private int numYLocations;
+
+
 	
 	private Joint<Position> initialPositions;
+
+	private int numXLocations = 0;
+	private int numYLocations = 0;
+
 		
 	/**
 	 * Arrays specifying the probability of successfully moving
@@ -71,6 +78,78 @@ public class SimpleBoard implements Board {
 	 */
 	private double stepReward = -1;
 	
+	public SimpleBoard(String filepath) {
+		List<String> lines = FileUtils.readLines(filepath);
+		//first, get board dimensions
+		for(String s: lines) {
+			if(s.replaceAll("\\n","").equals("END")) {
+				break;
+			} else {
+				this.numYLocations++;
+				this.numXLocations = s.length();
+			}
+		}
+		//set defaults
+		this.isOccupiablePosition = new boolean[numXLocations][numYLocations];
+		this.upMovementSuccessProbability = new double[numXLocations][numYLocations];
+		this.downMovementSuccessProbability = new double[numXLocations][numYLocations];
+		this.leftMovementSuccessProbability = new double[numXLocations][numYLocations];
+		this.rightMovementSuccessProbability = new double[numXLocations][numYLocations];
+		for (int x=0; x<numXLocations; x++) {
+			for (int y=0; y<numYLocations; y++) {
+				isOccupiablePosition[x][y] = true;
+				upMovementSuccessProbability[x][y] = 1;
+				downMovementSuccessProbability[x][y] = 1;
+				leftMovementSuccessProbability[x][y] = 1;
+				rightMovementSuccessProbability[x][y] = 1;
+			}
+		}
+		//load actual info
+		boolean atInfo = false;
+		HashMap<Character, String> references = new HashMap<String, String>();
+		for(int y=0;y<lines.size();y++) {
+			if(!atInfo) {
+				if(lines.get(y).replaceAll("\\n", "").equals("END")) {
+					atInfo = true;
+					continue;
+				}
+				// collect references
+				for(int x=0;x<lines.get(y).length();x++) {
+					char c = lines.get(y).charAt(x);
+					if(c=='X') {
+						this.isOccupiablePosition[x][lines.size()-y] = false;
+					} else if(c!='N') {
+						references.put(c, x+","+y);
+					}
+				}
+			} else {
+				String id = lines.get(y).split(":")[0];
+				String info = lines.get(y).split(":")[1];
+				if(id.equals("step reward")) {
+					this.stepReward = Double.parseDouble(info);
+				} else {
+					String[] allSettings = info.split(";");
+					String[][] settings = new String[allSettings.length][2];
+					int xCoord = Integer.parseInt(references.get(id).split(",")[0]);
+					int yCoord = lines.size() - Integer.parseInt(references.get(id).split(",")[1]);
+					for(int i=0;i<allSettings.length;i++) {
+						settings[i] = allSettings[i].split("=");
+					}
+					for(String[] setting: settings) {
+						String name = setting[0];
+						double value = Double.parseDouble(setting[1]);
+					}
+					if(id.equals("wall_left")) {
+						this.leftMovementSuccessProbability[x][lines.size()-y] = Double.parseDouble(info);
+					}
+				}
+			}
+		}
+		
+		this.occupiablePositions = this.computeOccupiablePositions();
+		this.allowableActions = this.computeAllowableActions();
+		
+	}
 	
 	public SimpleBoard(int numXLocations, int numYLocations) {
 		this.numXLocations = numXLocations;
