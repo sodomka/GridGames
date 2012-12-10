@@ -51,7 +51,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 	 * 
 	 * simulates games and totals the rewards for a set number of games
 	 */
-	public Joint<Double> simulateAgents(int numGames){
+	public Joint<Double> simulateAgents(int numGames, int numIter){
 		
 		// initialize variables 
 		Joint<Double> rewards = new Joint<Double>();
@@ -62,7 +62,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 		
 		//for the number of games specified, run a game and add the results to rewards
 		for(int i=1;i<=numGames; i++){
-			rewardsTemp = playGame();
+			rewardsTemp = playGame(numIter);
 			for(int r =0;r<rewards.size();r++){
 				rewards.set(r, rewards.get(r)+rewardsTemp.get(r));
 			}
@@ -77,7 +77,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 	 * 
 	 * @betsy
 	 */
-	public Joint<Double> playGame(){
+	public Joint<Double> playGame(int numIterations){
 		//initialize variables
 		Joint<A> actionToPlay;
 		DiscreteDistribution<S> transitionProb;
@@ -88,8 +88,9 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			rewards.add(0.0);
 		}
 		System.out.println(state);
+		int iteration = 0;
 		//until the end of the game, agents take actions
-		while(!game.isTerminalState(state)){
+		while(!game.isTerminalState(state) && iteration<numIterations){
 			System.out.println("First "+state);
 			actionToPlay = samplePolicy(state);
 			transitionProb = game.getTransitionProbabilities(state, actionToPlay);
@@ -102,6 +103,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			state = nextState;
 			System.out.println("Next "+state);
 			//TODO: need to add in transfer payments here!
+			iteration+=1;
 		}
 		return rewards;
 	}

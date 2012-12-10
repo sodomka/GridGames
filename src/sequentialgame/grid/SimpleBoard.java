@@ -197,8 +197,8 @@ public class SimpleBoard implements Board {
 		goalPositionsPerPlayer.add(p2Positions);
 		
 		initialPositions = new Joint<Position>();
-		initialPositions.add(new Position(0,1));
-		initialPositions.add(new Position(1,1));
+		initialPositions.add(new Position(0,0));
+		initialPositions.add(new Position(1,0));
 	}
 
 

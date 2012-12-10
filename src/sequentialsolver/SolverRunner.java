@@ -44,7 +44,7 @@ public class SolverRunner {
 //		state = iter.next();
 //		state = iter.next();
 		//Joint<GridAction> action = testSim.samplePolicy(state);
-		Joint<Double>rewards = testSim.simulateAgents(2);
+		Joint<Double>rewards = testSim.simulateAgents(2, 10);
 		System.out.println(rewards);
 		
 	}
