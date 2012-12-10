@@ -27,6 +27,8 @@ public class SimpleBoard implements Board {
 	 */
 	private int numXLocations;
 	private int numYLocations;
+	
+	private Joint<Position> initialPositions;
 		
 	/**
 	 * Arrays specifying the probability of successfully moving
@@ -95,10 +97,14 @@ public class SimpleBoard implements Board {
 		// By default, create a single goal position in (0,0) and none anywhere else.
 		List<Position> p1Positions = new ArrayList<Position>();
 		List<Position> p2Positions = new ArrayList<Position>();
-		p1Positions.add(new Position(0,0));
-		p2Positions.add(new Position(1,0));
+		p1Positions.add(new Position(1,1));
+		p2Positions.add(new Position(0,1));
 		goalPositionsPerPlayer.add(p1Positions);
-		goalPositionsPerPlayer.add(p2Positions);		
+		goalPositionsPerPlayer.add(p2Positions);
+		
+		initialPositions = new Joint<Position>();
+		initialPositions.add(new Position(0,1));
+		initialPositions.add(new Position(1,1));
 	}
 	
 	
@@ -274,6 +280,12 @@ public class SimpleBoard implements Board {
 	@Override
 	public boolean hasGoalForPlayer(Position playerPosition, Integer playerIdx) {
 		return (goalPositionsPerPlayer.get(playerIdx).contains(playerPosition));
+	}
+
+
+	@Override
+	public Joint<Position> getInitialPositions() {
+		return initialPositions;
 	}
 
 

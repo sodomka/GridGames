@@ -4,6 +4,7 @@ import java.util.List;
 
 import props.DiscreteDistribution;
 import props.Joint;
+import sequentialgame.grid.Position;
 
 /**
  * An interface for representing a sequential game, defined for
@@ -29,6 +30,9 @@ public interface SequentialGame<S extends AbstractState, A extends AbstractActio
 	public DiscreteDistribution<S> getTransitionProbabilities(S state, Joint<A> jointAction);
 	
 	public Joint<Double> getImmediateRewards(S state, Joint<A> jointAction, S nextState);
+	
+	public S getStartingState();
+	
 	
 }
 

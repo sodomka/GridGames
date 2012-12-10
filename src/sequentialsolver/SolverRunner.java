@@ -1,11 +1,17 @@
 package sequentialsolver;
 
+import java.util.Iterator;
+import java.util.Set;
+
+import props.Joint;
+
 import sequentialgame.SequentialGame;
 import sequentialgame.grid.Board;
 import sequentialgame.grid.GridAction;
 import sequentialgame.grid.GridGame;
 import sequentialgame.grid.GridState;
 import sequentialgame.grid.SimpleBoard;
+import sequentialsimulator.Simulator;
 import normalformsolver.BimatrixHuSolver;
 import normalformsolver.NormalFormSolver;
 
@@ -28,6 +34,19 @@ public class SolverRunner {
 		SequentialGame<GridState, GridAction> game = new GridGame(numPlayers, board);
 		JointPolicy<GridState,GridAction> policy = valueIteration.generatePolicy(game);
 		System.out.println("POLICY:" + policy);
+		
+		//@betsy basic testing
+		Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, game, 1);
+//		Set<GridState> states = policy.keySet();
+//		Iterator<GridState> iter = states.iterator();
+//		GridState state = iter.next();
+//		state = iter.next();
+//		state = iter.next();
+//		state = iter.next();
+		//Joint<GridAction> action = testSim.samplePolicy(state);
+		Joint<Double>rewards = testSim.simulateAgents(2);
+		System.out.println(rewards);
+		
 	}
 	
 	

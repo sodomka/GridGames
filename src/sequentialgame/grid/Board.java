@@ -3,6 +3,7 @@ package sequentialgame.grid;
 import java.util.List;
 
 import props.DiscreteDistribution;
+import props.Joint;
 
 /**
  * An interface for a 2-dimensional board on which
@@ -35,5 +36,7 @@ public interface Board {
 	public double getGoalReward(Position playerPosition, Integer playerIdx);
 	
 	public boolean hasGoalForPlayer(Position playerPosition, Integer playerIdx);
+	
+	public Joint<Position> getInitialPositions();
 	
 }
