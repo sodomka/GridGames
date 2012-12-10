@@ -44,12 +44,26 @@ public class BimatrixCocoSolver<A extends AbstractAction> implements NormalFormS
 		
 		// Solve the cooperative game
 		Joint<double[]> cooperativeMixedStrategyPerPlayer = BimatrixHuSolver.solveForMixedStrategies(player1CooperativePayoffs, player2CooperativePayoffs);
+		double[] player1CooperativeStrategy = cooperativeMixedStrategyPerPlayer.getForPlayer(player1Idx);
+		double[] player2CooperativeStrategy = cooperativeMixedStrategyPerPlayer.getForPlayer(player2Idx);
+		double[][] jointCooperativeStrategy = BimatrixHuSolver.getDistributionOverJointActions(player1CooperativeStrategy, player2CooperativeStrategy);
+		// Get expected payoffs if agents play these strategies. 
+		double player1CooperativeExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player1CooperativePayoffs, jointCooperativeStrategy);
+		double player2CooperativeExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player2CooperativePayoffs, jointCooperativeStrategy);
 		
 		// Solve the competitive game.
 		Joint<double[]> competitiveMixedStrategyPerPlayer = BimatrixHuSolver.solveForMixedStrategies(player1CompetitivePayoffs, player2CompetitivePayoffs);
+		double[] player1CompetitiveStrategy = competitiveMixedStrategyPerPlayer.getForPlayer(player1Idx);
+		double[] player2CompetitiveStrategy = competitiveMixedStrategyPerPlayer.getForPlayer(player2Idx);
+		double[][] jointCompetitiveStrategy = BimatrixHuSolver.getDistributionOverJointActions(player1CompetitiveStrategy, player2CompetitiveStrategy);
+		// Get expected payoffs if agents play these strategies. 
+		double player1CompetitiveExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player1CompetitivePayoffs, jointCompetitiveStrategy);
+		double player2CompetitiveExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player2CompetitivePayoffs, jointCompetitiveStrategy);
 		
 		// Solution is to follow the cooperative strategy.
 		// Coco values define the transfer utility.
+		// FIXME left off here
+		
 		
 		return null;
 	}

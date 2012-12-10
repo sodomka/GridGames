@@ -31,6 +31,7 @@ public class GridGame implements SequentialGame<GridState, GridAction> {
 	List<GridState> possibleStates;
 	List<Joint<GridAction>> possibleJointActions;
 	
+	
 	public GridGame(int numPlayers, Board staticBoard) {
 		this.numPlayers = numPlayers;
 		this.staticBoard = staticBoard;
@@ -417,6 +418,17 @@ public class GridGame implements SequentialGame<GridState, GridAction> {
 		return false;
 	}
 
+	//@ Betsy, to allow for simulation
+	
+
+	@Override
+	public GridState getStartingState() {
+		
+		return new GridState(staticBoard.getInitialPositions());
+	}
+	
+
+	
 
 
 }

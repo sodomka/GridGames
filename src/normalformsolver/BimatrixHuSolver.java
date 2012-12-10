@@ -156,24 +156,13 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 //	}
 
 	
-    private static void AllClear(int WList[][],int ZList[][],double Q[],double LZ[][],int k, int dimM){
-		// Define index matrix WList and ZList,Q
-	
-		for (int i=0;i<dimM;i++){
-			WList[i][1] = i; WList[i][0] =1;  //"W"
-			ZList[i][1] = i; ZList[i][0] =2;  // "z"
-			Q[i] = -1;
-			LZ[k][i] = 0;
-		}
-    }
-	
+
     
 	public static Joint<double[]> solveForMixedStrategies(
 			double[][] player1Payoffs,
 			double[][] player2Payoffs) {
-		// TODO Auto-generated method stub
 		int numPlayer1Actions = player1Payoffs.length; // row
-		int numPlayer2Actions = player2Payoffs[0].length; // col
+		int numPlayer2Actions = player1Payoffs[0].length; // col
 		int numTotalActions = numPlayer1Actions + numPlayer2Actions; // dimM
 		
 		// Each row is a different equilibrium strategy. Each column gives the probability of 
@@ -199,11 +188,44 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		return mixedStrategies;
 	}
 	
+	public static double[][] getDistributionOverJointActions(double[] player1Mix, double[] player2Mix) {
+		int numPlayer1Actions = player1Mix.length; 
+		int numPlayer2Actions = player2Mix.length;
+		double[][] jointActionDistribution = new double[numPlayer1Actions][numPlayer2Actions];
+		for (int action1Idx=0; action1Idx<numPlayer1Actions; action1Idx++) {
+			for (int action2Idx=0; action2Idx<numPlayer2Actions; action2Idx++) {
+				double probAction1 = player1Mix[action1Idx];
+				double probAction2 = player2Mix[action2Idx];
+				jointActionDistribution[action1Idx][action2Idx] = probAction1 * probAction2; 
+			}
+		}
+		return jointActionDistribution;
+	}
+	
+	/**
+	 * Computes the expected payoff for a player, given that player's payoff matrix and the probability of each
+	 * outcome.
+	 * @param playerPayoffMatrix
+	 * @param outcomeProbability
+	 * @return
+	 */
+	public static double getExpectedPayoffsForPlayer(double[][] playerPayoffMatrix, double[][] outcomeProbability) {
+		int numPlayer1Actions = playerPayoffMatrix.length;
+		int numPlayer2Actions = playerPayoffMatrix[0].length;
+		double expectedPayoff = 0;
+		for (int action1=0; action1<numPlayer1Actions; action1++) {
+			for (int action2=0; action2<numPlayer2Actions; action2++) {
+				expectedPayoff += playerPayoffMatrix[action1][action2] * outcomeProbability[action1][action2];
+			}
+		}
+		return expectedPayoff;
+	}
+	
 	
 	
 	
     
-    public static void getnash(double A[][] , double B[][],double Z[][], int row, int col, int dimM){
+    private static void getnash(double A[][] , double B[][],double Z[][], int row, int col, int dimM){
 		
 		double LA[][];
 		double LB[][];
@@ -240,6 +262,17 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		}
 		//QMprint(LB,row,col);
 	}
+    
+    private static void AllClear(int WList[][],int ZList[][],double Q[],double LZ[][],int k, int dimM){
+		// Define index matrix WList and ZList,Q
+	
+		for (int i=0;i<dimM;i++){
+			WList[i][1] = i; WList[i][0] =1;  //"W"
+			ZList[i][1] = i; ZList[i][0] =2;  // "z"
+			Q[i] = -1;
+			LZ[k][i] = 0;
+		}
+    }
 	
 	public static void getonenash(double M[][],double Q[],int WList[][],int ZList[][],int k, double LA[][],double LB[][], double LZ[][], int row, int col, int dimM){
 		int c=0,r=0,j1;	
