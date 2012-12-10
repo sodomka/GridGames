@@ -29,12 +29,6 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 	static final int player1Idx = 0;
 	static final int player2Idx = 1;
 	
-	int row;
-	int col;
-	int dimM;
-	double[][] player1Payoffs;
-	double[][] player2Payoffs;
-	double[][] Z;
 	
 //	public static void main(String[] args) {
 //		int numPlayers = 2;
@@ -74,24 +68,17 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 			System.err.println("Bimatrix solver being used for " + numPlayers + " player game.");
 		}
 		
-		player1Payoffs = getPayoffMatrixForPlayer(normalFormGame, player1Idx);
-		player2Payoffs = getPayoffMatrixForPlayer(normalFormGame, player2Idx);
-		
-		// Set other variables defined elsewhere.
-		row = player1Payoffs.length;
-		col = player1Payoffs[0].length;
-		dimM = row + col;
-		Z = new double[row][dimM];
+		// Extract the payoff matrices for players 1 and 2.
+		double[][] player1Payoffs = getPayoffMatrixForPlayer(normalFormGame, player1Idx);
+		double[][] player2Payoffs = getPayoffMatrixForPlayer(normalFormGame, player2Idx);
 
-		// Solve for equilibrium.
-		getnash(player1Payoffs,player2Payoffs,Z);
+		// Solve the normal-form game
+		Joint<double[]> mixedStrategyPerPlayer = solveForMixedStrategies(player1Payoffs, player2Payoffs);
 		
-		// Convert solution out of the Z matrix.
-		// Return the joint strategy.
-		double[] player1StrategyArr = getEquilibriumStrategyForPlayer(player1Idx);
-		double[] player2StrategyArr = getEquilibriumStrategyForPlayer(player2Idx);
+		// Return the solution in terms of the joint strategy.
+		double[] player1StrategyArr = mixedStrategyPerPlayer.getForPlayer(player1Idx);
+		double[] player2StrategyArr = mixedStrategyPerPlayer.getForPlayer(player2Idx);
 		DiscreteDistribution<Joint<A>> jointStrategy = getJointStrategyFromIndependentStrategies(normalFormGame, player1StrategyArr, player2StrategyArr);
-		
 		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy);
 		return solution;
 	}
