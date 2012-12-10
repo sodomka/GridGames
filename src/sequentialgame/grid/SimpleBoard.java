@@ -30,7 +30,7 @@ public class SimpleBoard implements Board {
 	 */
 	private int numXLocations = 0;
 	private int numYLocations = 0;
-		
+
 	/**
 	 * Arrays specifying the probability of successfully moving
 	 * in the specified direction, assuming the final location
@@ -49,12 +49,12 @@ public class SimpleBoard implements Board {
 	 */
 	private boolean[][] isOccupiablePosition;
 	private List<Position> occupiablePositions;
-	
+
 	/**
 	 * A list of actions that have any meaning on this board.
 	 */
 	private List<GridAction> allowableActions;
-	
+
 	/**
 	 * For each player, a list of positions for which
 	 * a goal is located.
@@ -65,13 +65,13 @@ public class SimpleBoard implements Board {
 	 * The immediate reward a player receives for reaching a goal position. 
 	 */
 	private double goalReward = 100;
-	
+
 	/**
 	 * The immediate reward a player receives for taking a non-stick action.
 	 * This is typically negative.
 	 */
 	private double stepReward = -1;
-	
+
 	public SimpleBoard(String filepath) {
 		List<String> lines = FileUtils.readLines(filepath);
 		//first, get board dimensions
@@ -100,7 +100,7 @@ public class SimpleBoard implements Board {
 		}
 		//load actual info
 		boolean atInfo = false;
-		HashMap<Character, String> references = new HashMap<String, String>();
+		HashMap<Character, String> references = new HashMap<Character, String>();
 		for(int y=0;y<lines.size();y++) {
 			if(!atInfo) {
 				if(lines.get(y).replaceAll("\\n", "").equals("END")) {
@@ -126,25 +126,41 @@ public class SimpleBoard implements Board {
 					String[][] settings = new String[allSettings.length][2];
 					int xCoord = Integer.parseInt(references.get(id).split(",")[0]);
 					int yCoord = lines.size() - Integer.parseInt(references.get(id).split(",")[1]);
+					List<Position> p1Goals = new ArrayList<Position>();
+					List<Position> p2Goals = new ArrayList<Position>();
 					for(int i=0;i<allSettings.length;i++) {
 						settings[i] = allSettings[i].split("=");
 					}
 					for(String[] setting: settings) {
 						String name = setting[0];
 						double value = Double.parseDouble(setting[1]);
-					}
-					if(id.equals("wall_left")) {
-						this.leftMovementSuccessProbability[x][lines.size()-y] = Double.parseDouble(info);
+						if(name.equals("wall_left")) {
+							this.leftMovementSuccessProbability[xCoord][yCoord] = Double.parseDouble(info);
+						} else if(name.equals("wall_right")) {
+							this.rightMovementSuccessProbability[xCoord][yCoord] = Double.parseDouble(info);
+						} else if(name.equals("wall_up")) {
+							this.upMovementSuccessProbability[xCoord][yCoord] = Double.parseDouble(info);
+						} else if(name.equals("wall_down")) {
+							this.downMovementSuccessProbability[xCoord][yCoord] = Double.parseDouble(info);
+						} else if(name.equals("goal_a")) { //TODO: add arbitrary numbers of players
+							p1Goals.add(new Position(xCoord, yCoord));
+						} else if(name.equals("goal_b")) { 
+							p2Goals.add(new Position(xCoord, yCoord));
+						} else if(name.equals("start_a")) {
+							//TODO: set start
+						} else if(name.equals("start_b")) {
+							//TODO: set end
+						}
 					}
 				}
 			}
 		}
-		
+
 		this.occupiablePositions = this.computeOccupiablePositions();
 		this.allowableActions = this.computeAllowableActions();
-		
+
 	}
-	
+
 	public SimpleBoard(int numXLocations, int numYLocations) {
 		this.numXLocations = numXLocations;
 		this.numYLocations = numYLocations;
@@ -175,8 +191,8 @@ public class SimpleBoard implements Board {
 		goalPositionsPerPlayer.add(p1Positions);
 		goalPositionsPerPlayer.add(p2Positions);		
 	}
-	
-	
+
+
 	private List<Position> computeOccupiablePositions() {
 		List<Position> occupiablePositions = new ArrayList<Position>();
 		for (int x=0; x<numXLocations; x++) {
@@ -188,7 +204,7 @@ public class SimpleBoard implements Board {
 		}
 		return occupiablePositions;
 	}
-	
+
 	@Override
 	public List<Position> getOccupiablePositions() {
 		return occupiablePositions;
@@ -204,13 +220,13 @@ public class SimpleBoard implements Board {
 		allowableActions.add(new GridAction("stick"));
 		return allowableActions;
 	}
-	
+
 	@Override
 	public List<GridAction> getAllowableActions() {
 		return allowableActions;
 	}
-	
-	
+
+
 
 	@Override
 	public double getActionReward(GridAction playerAction) {
@@ -234,9 +250,9 @@ public class SimpleBoard implements Board {
 		}
 		return 0;
 	}
-	
-	
-	
+
+
+
 	public DiscreteDistribution<Position> getNextPositionDistribution(
 			Position currentPlayerPosition,
 			GridAction playerAction) {
@@ -246,10 +262,10 @@ public class SimpleBoard implements Board {
 		Position nextPlayerPositionGivenActionFail = currentPlayerPosition;
 
 		double probabilityOfActionSuccess = getProbabilityOfActionSuccess(currentPlayerPosition, playerAction);
-		
+
 		DiscreteDistribution<Position> nextPositionDistribution = new DiscreteDistribution<Position>();
 		nextPositionDistribution.add(nextPlayerPositionGivenActionSuccess, probabilityOfActionSuccess);
-		
+
 		// Add a failure position if movement failure is possible.
 		if (probabilityOfActionSuccess<1) {
 			nextPositionDistribution.add(nextPlayerPositionGivenActionFail, 1-probabilityOfActionSuccess);
@@ -257,7 +273,7 @@ public class SimpleBoard implements Board {
 		return nextPositionDistribution;
 	}
 
-	
+
 	private double getProbabilityOfActionSuccess(
 			Position currentPlayerPosition, GridAction playerAction) {
 		int x = currentPlayerPosition.getX();
@@ -317,8 +333,8 @@ public class SimpleBoard implements Board {
 		}
 		return getPosition(nextX, nextY);
 	}
-	
-	
+
+
 	private Position getPosition(int x, int y) {
 		// TODO: Could keep a list of positions to ensure
 		// duplicate positions aren't stored in memory.
