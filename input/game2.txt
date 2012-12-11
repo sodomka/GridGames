@@ -5,5 +5,5 @@ END
 stepcost:-0.1
 A:start_0=True
 B:start_1=True;goal_0=100.0
-C:goal_0=100.0
-D:goal_1=100.0
+C:goal_0=800.0
+D:goal_1=800.0

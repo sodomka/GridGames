@@ -28,8 +28,8 @@ public class SolverRunner {
 	
 	public static void main(String[] args) {
 		int numIterations = 1000;
-//		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
-		NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
+		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
+		//NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
 		double gamma = .9;
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(numIterations, normalFormSolver, gamma);
 
