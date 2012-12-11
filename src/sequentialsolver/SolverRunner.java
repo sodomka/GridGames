@@ -25,12 +25,12 @@ public class SolverRunner {
 
 	
 	public static void main(String[] args) {
-		int numIterations = 10;
+		int numIterations = 1000;
 		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
 		double gamma = .9;
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(numIterations, normalFormSolver, gamma);
 
-		String filename = "./input/grid2.txt";
+		String filename = "./input/grid8.txt";
 		SimpleBoard board = new SimpleBoard(filename);
 		//Board board = new SimpleBoard(2, 2);
 		int numPlayers = 2;
@@ -47,7 +47,7 @@ public class SolverRunner {
 //		state = iter.next();
 //		state = iter.next();
 		//Joint<GridAction> action = testSim.samplePolicy(state);
-		Joint<Double>rewards = testSim.simulateAgents(200, 20);
+		Joint<Double>rewards = testSim.simulateAgents(100, 200);
 		System.out.println(rewards);
 		
 	}

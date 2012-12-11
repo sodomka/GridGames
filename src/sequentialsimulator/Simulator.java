@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * A class for running agents with different policies and evaluating
  * agent payoffs.
- * @author sodomka
+ * @author betsy
  * @param <A>
  *
  * @param <S>

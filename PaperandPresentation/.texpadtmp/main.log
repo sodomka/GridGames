@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  10 DEC 2012 23:24
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  11 DEC 2012 02:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -223,7 +223,7 @@ Package: titling 2009/09/04 v2.1d maketitle typesetting
 \thanksmargin=\skip56
 \droptitle=\skip57
 )
-(/Users/ehilliard/Desktop/git/.texpadtmp/main.aux)
+(/Users/ehilliard/workspace/GridGames/PaperandPresentation/.texpadtmp/main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
@@ -238,7 +238,6 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 41.
 LaTeX Font Info:    ... okay on input line 41.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 41.
 LaTeX Font Info:    ... okay on input line 41.
-
 (/usr/local/texlive/2011/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count105
@@ -269,33 +268,40 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 File: text/pic_CEQ.pdf Graphic file (type pdf)
  <use text/pic_CEQ.pdf>
 Package pdftex.def Info: text/pic_CEQ.pdf used on input line 2.
-(pdftex.def)             Requested size: 475.42976pt x 170.71652pt.
+(pdftex.def)             Requested size: 396.189pt x 142.26378pt.
 
-Overfull \hbox (5.67474pt too wide) in paragraph at lines 2--3
+Overfull \hbox (52.968pt too wide) in paragraph at lines 21--36
 [] 
  []
 
-) (/Users/ehilliard/Desktop/git/.texpadtmp/main.bbl [2 <./text/pic_CEQ.pdf>])
-[3] (/Users/ehilliard/Desktop/git/.texpadtmp/main.aux) ) 
+
+Overfull \hbox (33.02388pt too wide) in paragraph at lines 38--78
+[] [] [] [] []
+ []
+
+) [2 <./text/pic_CEQ.pdf>]
+(/Users/ehilliard/workspace/GridGames/PaperandPresentation/.texpadtmp/main.bbl)
+[3]
+(/Users/ehilliard/workspace/GridGames/PaperandPresentation/.texpadtmp/main.aux)
+ ) 
 Here is how much of TeX's memory you used:
  2956 strings out of 493633
- 39657 string characters out of 3143378
- 96276 words of memory out of 3000000
+ 39918 string characters out of 3143378
+ 107276 words of memory out of 3000000
  6199 multiletter control sequences out of 15000+200000
  11234 words of font info for 44 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
  42i,8n,28p,709b,199s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/texlive/201
-1/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2011
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2011/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2011/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2011/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2011/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2011/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2011/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on /Users/ehilliard/Desktop/git/.texpadtmp/main.pdf (3 pages, 93
-7785 bytes).
+</usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
+</usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
+usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
+r/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/
+local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/loc
+al/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
+l/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on /Users/ehilliard/workspace/GridGames/PaperandPresentation/.te
+xpadtmp/main.pdf (3 pages, 942650 bytes).
 PDF statistics:
  4324 PDF objects out of 5155 (max. 8388607)
  2168 compressed objects within 22 object streams
