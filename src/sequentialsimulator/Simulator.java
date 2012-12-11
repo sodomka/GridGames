@@ -107,6 +107,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			//TODO: need to add in transfer payments here!
 			iteration+=1;
 		}
+		System.out.println(rewards);
 		return rewards;
 	}
 	
