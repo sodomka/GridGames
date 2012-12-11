@@ -2,6 +2,7 @@ package normalformsolver;
 
 import java.util.List;
 
+import props.DiscreteDistribution;
 import props.Joint;
 
 import normalformgame.NormalFormGame;
@@ -62,10 +63,12 @@ public class BimatrixCocoSolver<A extends AbstractAction> implements NormalFormS
 		
 		// Solution is to follow the cooperative strategy.
 		// Coco values define the transfer utility.
-		// FIXME left off here
+		// FIXME left off here. Add something about transfer payments
 		
-		
-		return null;
+		DiscreteDistribution<Joint<A>> jointStrategy = BimatrixHuSolver.getJointStrategyFromIndependentStrategies(normalFormGame, player1CooperativeStrategy, player2CooperativeStrategy);
+		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy);
+
+		return solution;
 	}
 
 }
