@@ -99,6 +99,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 		//until the end of the game, agents take actions
 		while(!game.isTerminalState(state) && iteration<numIterations){
 			System.out.println("First "+state);
+			System.out.println(transfers.get(state));
 			actionToPlay = samplePolicy(state);
 			transitionProb = game.getTransitionProbabilities(state, actionToPlay);
 			nextState = sampleResultingState(transitionProb);
@@ -109,7 +110,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			}
 			state = nextState;
 			System.out.println("Next "+state);
-			System.out.println(transfers.get(state));
+			
 			iteration+=1;
 		}
 		System.out.print("Game rewards: ");
