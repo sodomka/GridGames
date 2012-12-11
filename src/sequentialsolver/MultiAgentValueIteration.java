@@ -96,6 +96,7 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 				// and always transition to itself. That way, the accuracy of an algorithm doesn't
 				// depend on not updating terminal states.
 				if (sequentialGame.isTerminalState(state)) {
+					updatedJointValueFunction.put(state, zeros);
 					continue;
 				}
 				

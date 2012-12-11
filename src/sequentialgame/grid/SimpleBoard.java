@@ -389,7 +389,7 @@ public class SimpleBoard implements Board {
 		nextX = Math.max(0, nextX);
 		nextX = Math.min(numXLocations-1, nextX);
 		nextY = Math.max(0, nextY);
-		nextY = Math.min(numXLocations-1, nextY);
+		nextY = Math.min(numYLocations-1, nextY);
 
 		// Any actions towards non-occupiable positions result 
 		// in no movement.
