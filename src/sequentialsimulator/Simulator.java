@@ -126,6 +126,11 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			
 		}
 		
+		double epsilon = .001;
+		if (Math.abs(cumProb-1) > epsilon) {
+			System.err.println("Cumulative probability sums to " + cumProb);
+		}
+		
 		Random rand = new Random();
 		double randVal = rand.nextDouble();
 
