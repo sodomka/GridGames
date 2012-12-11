@@ -62,11 +62,13 @@ public class BimatrixCocoSolver<A extends AbstractAction> implements NormalFormS
 		double player2CompetitiveExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player2CompetitivePayoffs, jointCompetitiveStrategy);
 		
 		// Solution is to follow the cooperative strategy.
-		// Coco values define the transfer utility.
-		// FIXME left off here. Add something about transfer payments
+		// Competitive strategy payoffs define the transfer utility.
+		Joint<Double> transferPayments = new Joint<Double>();
+		transferPayments.add(player1CompetitiveExpectedPayoff);
+		transferPayments.add(player2CompetitiveExpectedPayoff);
 		
 		DiscreteDistribution<Joint<A>> jointStrategy = BimatrixHuSolver.getJointStrategyFromIndependentStrategies(normalFormGame, player1CooperativeStrategy, player2CooperativeStrategy);
-		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy);
+		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy, transferPayments);
 
 		return solution;
 	}

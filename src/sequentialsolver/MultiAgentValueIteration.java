@@ -2,7 +2,9 @@ package sequentialsolver;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import props.DiscreteDistribution;
 import props.Joint;
@@ -64,6 +66,8 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 	private JointPolicy<S,A> jointPolicy;
 	
 	
+	private Map<S,Joint<Double>> jointTransfers;
+	
 	
 	public MultiAgentValueIteration(int numIterations, NormalFormSolver<A> normalFormSolver, double gamma) {
 		this.numIterations = numIterations;
@@ -72,9 +76,10 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 		
 		this.jointValueFunction = new JointValueFunction<S>();		
 		this.jointPolicy = new JointPolicy<S,A>();
+		this.jointTransfers = new HashMap<S, Joint<Double>>();
 	}
 	
-	public JointPolicy<S,A> generatePolicy(SequentialGame<S,A> sequentialGame) {
+	public PolicyAndTransfers<S,A> generatePolicyAndTransfers(SequentialGame<S,A> sequentialGame) {
 		
 		// Initialize value function.
 		int numPlayers = sequentialGame.getNumPlayers();
@@ -162,6 +167,12 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 				DiscreteDistribution<Joint<A>> jointActionDistribution = gameSolution.getJointActionDistribution();
 				jointPolicy.put(state, jointActionDistribution);
 				
+				// Update the transfer payments that occur at this state
+				// (a positive value indicates some additional reward for that player)
+				// (all transfer payments should sum to 0).
+				Joint<Double> transferPayments = gameSolution.getTransferPayments();
+				jointTransfers.put(state, transferPayments);
+				
 			}
 			
 			// Compare value function to the previous iteration's.
@@ -171,7 +182,9 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 			// Now that all states have been considered, update the value function.
 			jointValueFunction = updatedJointValueFunction;
 		}
-		return jointPolicy;
+		
+		PolicyAndTransfers<S,A> policyAndTransfers = new PolicyAndTransfers<S,A>(jointPolicy, jointTransfers);
+		return policyAndTransfers;
 	}
 
 	private double getValueFunctionDifference(

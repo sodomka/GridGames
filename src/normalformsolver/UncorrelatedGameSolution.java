@@ -18,11 +18,13 @@ public class UncorrelatedGameSolution<A extends AbstractAction> implements GameS
 	
 	DiscreteDistribution<Joint<A>> jointActionDistribution;
 	NormalFormGame<A> game;
+	Joint<Double> transferPayments;
 	
 	
-	public UncorrelatedGameSolution(NormalFormGame<A> game, DiscreteDistribution<Joint<A>> jointActionDistribution) {
+	public UncorrelatedGameSolution(NormalFormGame<A> game, DiscreteDistribution<Joint<A>> jointActionDistribution, Joint<Double> transferPayments) {
 		this.game = game;
 		this.jointActionDistribution = jointActionDistribution;
+		this.transferPayments = transferPayments;
 	}
 	
 	
@@ -50,10 +52,11 @@ public class UncorrelatedGameSolution<A extends AbstractAction> implements GameS
 	@Override
 	public Joint<Double> getExpectedPayoffs() {
 
-		// Initialize expected payoffs to 0 for each player.
+		// Initialize expected payoffs to equal transfer payments for each player.
 		Joint<Double> expectedReward = new Joint<Double>();
 		for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
-			expectedReward.add(0.0);
+			//expectedReward.add(0.0);
+			expectedReward.add(transferPayments.getForPlayer(playerIdx));
 		}
 		
 		// Compute expected payoffs
@@ -67,6 +70,12 @@ public class UncorrelatedGameSolution<A extends AbstractAction> implements GameS
 		}
 		
 		return expectedReward;
+	}
+
+
+	@Override
+	public Joint<Double> getTransferPayments() {
+		return transferPayments;
 	}
 
 }

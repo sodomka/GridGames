@@ -1,6 +1,7 @@
 package sequentialsolver;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import props.Joint;
@@ -27,8 +28,8 @@ public class SolverRunner {
 	
 	public static void main(String[] args) {
 		int numIterations = 1000;
-		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
-//		NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
+//		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
+		NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
 		double gamma = .9;
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(numIterations, normalFormSolver, gamma);
 
@@ -37,7 +38,10 @@ public class SolverRunner {
 		//Board board = new SimpleBoard(2, 2);
 		int numPlayers = 2;
 		SequentialGame<GridState, GridAction> game = new GridGame(numPlayers, board);
-		JointPolicy<GridState,GridAction> policy = valueIteration.generatePolicy(game);
+		PolicyAndTransfers<GridState, GridAction> policyAndTransfers = valueIteration.generatePolicyAndTransfers(game);
+		JointPolicy<GridState,GridAction> policy = policyAndTransfers.getPolicy();
+		Map<GridState,Joint<Double>> transfers = policyAndTransfers.getTransfers();
+		
 		System.out.println("POLICY:\n" + policy.toString(.001));
 		
 		//@betsy basic testing
