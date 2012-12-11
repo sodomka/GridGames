@@ -46,7 +46,7 @@ public class SimulateRun {
 				Integer.parseInt(args[2]),Integer.parseInt(args[3]), 
 				Integer.parseInt(args[4]), Double.parseDouble(args[5]));
 		}else{
-			String filenm = "./input/grid7.txt";
+			String filenm = "./input/grid6.txt";
 			int numPlay = 2;
 			int numGame = 100;
 			int maxIter = 1000;
@@ -59,8 +59,8 @@ public class SimulateRun {
 	}
 	public void  simulateRun() {
 		
-		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
-		//NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
+		//NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
+		NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(maxSolverIter, normalFormSolver, gamma);
 
 		SimpleBoard board = new SimpleBoard(filename);
@@ -80,7 +80,7 @@ public class SimulateRun {
 		
 		Joint<Double> payoff = testSim.simulateAgents(numGames, maxGameMoves);
 		System.out.println("Ran:" +numGames+" games "+maxGameMoves+" moves per game were allowed.");
-		System.out.print("Average Payoff: ");
+		System.out.print("Average Rewards: ");
 		for (int playerIdx=0; playerIdx <payoff.size(); playerIdx++) {
 			System.out.printf("%.3f", payoff.get(playerIdx)/numGames);
 			System.out.print(" ");

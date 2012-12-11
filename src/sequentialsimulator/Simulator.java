@@ -94,6 +94,10 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 		for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
 			rewards.add(0.0);
 		}
+		Joint<Double> payoffs = new Joint<Double>();
+		for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
+			payoffs.add(0.0);
+		}
 		//System.out.println(state);
 		int iteration = 0;
 		//until the end of the game, agents take actions
@@ -104,9 +108,11 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			transitionProb = game.getTransitionProbabilities(state, actionToPlay);
 			nextState = sampleResultingState(transitionProb);
 			Joint<Double> rewardsTemp = game.getImmediateRewards(state, actionToPlay, nextState);
-			 
+			Joint<Double> payoffsTemp = transfers.get(state);
+			
 			for(int i =0;i<rewards.size();i++){
 				rewards.set(i, rewards.get(i)+rewardsTemp.get(i));
+				payoffs.set(i, rewards.get(i)+payoffsTemp.get(i));
 			}
 			state = nextState;
 			System.out.println("Next "+state);
@@ -116,6 +122,11 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 		System.out.print("Game rewards: ");
 		for (int playerIdx=0; playerIdx <rewards.size(); playerIdx++) {
 			System.out.printf("%.3f", rewards.get(playerIdx));
+			System.out.print(" ");
+		}
+		System.out.print("Game Payoffs: ");
+		for (int playerIdx=0; playerIdx <rewards.size(); playerIdx++) {
+			System.out.printf("%.3f", payoffs.get(playerIdx));
 			System.out.print(" ");
 		}
 		System.out.println();
