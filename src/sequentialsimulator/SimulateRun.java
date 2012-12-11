@@ -46,10 +46,10 @@ public class SimulateRun {
 				Integer.parseInt(args[2]),Integer.parseInt(args[3]), 
 				Integer.parseInt(args[4]), Double.parseDouble(args[5]));
 		}else{
-			String filenm = "./input/game2.txt";
+			String filenm = "./input/grid8.txt";
 			int numPlay = 2;
-			int numGame = 10;
-			int maxIter = 50;
+			int numGame = 1;
+			int maxIter = 500;
 			int maxMove = 20;
 			double gam = .9;
 			sim = new SimulateRun(filenm,numPlay,numGame,maxIter,maxMove,gam);
