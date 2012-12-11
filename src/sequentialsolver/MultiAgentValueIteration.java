@@ -1,5 +1,6 @@
 package sequentialsolver;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -99,13 +100,55 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 					updatedJointValueFunction.put(state, zeros);
 					continue;
 				}
-				
+
 				// Construct a normal form game where payoffs for a given 
 				// action profile are based on the expected immediate rewards for 
 				// the (state, actionProfile, nextState) tuple plus the expected
 				// discounted future reward over next states (based on the 
 				// current value function).
 				NormalFormGame<A> normalFormGame = createNormalFormGame(sequentialGame, state, jointValueFunction, discountFactor);
+				
+//				/////////////////////////////////// DEBUG
+//				System.out.println("test3");
+//				System.out.println("game: " + normalFormGame);
+//				List<A> actions = sequentialGame.getPossibleActionsForPlayer(0);
+//				int numActions = actions.size();
+//				double[][] payoffs1 = new double[numActions][numActions];
+//				double[][] payoffs2 = new double[numActions][numActions];
+//				for (int action1Idx=0; action1Idx<numActions; action1Idx++) {
+//					for (int action2Idx=0; action2Idx<numActions; action2Idx++) {
+//						Joint<A> actionsPerPlayer = new Joint<A>();
+//						actionsPerPlayer.add(actions.get(action1Idx));
+//						actionsPerPlayer.add(actions.get(action2Idx));
+//						Joint<Double> payoffs = normalFormGame.getPayoffsForJointAction(actionsPerPlayer);
+//						payoffs1[action1Idx][action2Idx] = payoffs.getForPlayer(0);
+//						payoffs2[action1Idx][action2Idx] = payoffs.getForPlayer(1);
+//					}
+//				}
+//				System.out.print("payoffs1 = {");
+//				for (int action1Idx=0; action1Idx<numActions; action1Idx++) {
+//					System.out.print("{");
+//					for (int action2Idx=0; action2Idx<numActions; action2Idx++) {
+//						System.out.print(payoffs1[action1Idx][action2Idx]);
+//						if (action2Idx != numActions-1) System.out.print(", ");
+//					}
+//					System.out.print("}");
+//					if (action1Idx != numActions-1) System.out.print(", ");
+//				}
+//				System.out.println("}");
+//				System.out.print("payoffs2 = {");
+//				for (int action1Idx=0; action1Idx<numActions; action1Idx++) {
+//					System.out.print("{");
+//					for (int action2Idx=0; action2Idx<numActions; action2Idx++) {
+//						System.out.print(payoffs2[action1Idx][action2Idx]);
+//						if (action2Idx != numActions-1) System.out.print(", ");
+//					}
+//					System.out.print("}");
+//					if (action1Idx != numActions-1) System.out.print(", ");
+//				}
+//				System.out.println("}");
+//				/////////////////////////////////// END DEBUG
+				
 				
 				// Compute solution to normal form game  
 				GameSolution<A> gameSolution = normalFormSolver.solve(normalFormGame);
@@ -118,6 +161,7 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 				// Update policy at this state.
 				DiscreteDistribution<Joint<A>> jointActionDistribution = gameSolution.getJointActionDistribution();
 				jointPolicy.put(state, jointActionDistribution);
+				
 			}
 			
 			// Compare value function to the previous iteration's.

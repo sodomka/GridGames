@@ -18,6 +18,7 @@
  */
 package normalformsolver;
 
+import java.util.Arrays;
 import java.util.List;
 import props.DiscreteDistribution;
 import props.Joint;
@@ -29,6 +30,25 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 	static final int player1Idx = 0;
 	static final int player2Idx = 1;
 	
+	
+	public static void main(String[] args) {
+		//game: {[stick, stick]=[130.91049, 65.39049000000003], [right, right]=[89.81000000000002, -0.1], [stick, up]=[130.91049, 65.29049000000003], [right, up]=[117.62944100000003, 58.75144100000003], [down, down]=[89.81000000000002, 0.7010802774987996], [up, left]=[117.62944100000003, 58.670441000000025], [right, down]=[89.81000000000002, -0.1], [right, stick]=[117.62944100000003, 58.85144100000003], [stick, right]=[40.36950000000001, 40.26950000000001], [left, up]=[145.45610000000002, 72.55610000000003], [up, stick]=[130.81049000000002, 65.39049000000003], [right, left]=[117.62944100000003, 58.670441000000025], [up, down]=[130.81049000000002, 65.29049000000003], [left, stick]=[145.45610000000002, 72.65610000000002], [stick, left]=[130.91049, 65.20049000000003], [down, stick]=[145.45610000000002, 72.65610000000002], [down, left]=[145.45610000000002, -0.1], [left, left]=[145.45610000000002, -0.1], [stick, down]=[130.91049, 65.29049000000003], [down, right]=[89.81000000000003, 0.7010802774994668], [up, right]=[-0.1, 80.72900000000003], [left, right]=[-0.1, 80.72900000000003], [down, up]=[145.45610000000002, 72.55610000000003], [up, up]=[130.81049000000002, 65.29049000000003], [left, down]=[-0.1, 80.72900000000003]}
+		double[][] payoffs1 = {{130.81049000000002, 130.81049000000002, 117.62944100000003, -0.1, 130.81049000000002}, {145.45610000000002, 89.81000000000002, 145.45610000000002, 89.81000000000003, 145.45610000000002}, {145.45610000000002, -0.1, 145.45610000000002, -0.1, 145.45610000000002}, {117.62944100000003, 89.81000000000002, 117.62944100000003, 89.81000000000002, 117.62944100000003}, {130.91049, 130.91049, 130.91049, 40.36950000000001, 130.91049}};
+		double[][] payoffs2 = {{65.29049000000003, 65.29049000000003, 58.670441000000025, 80.72900000000003, 65.39049000000003}, {72.55610000000003, 0.7010802774987996, -0.1, 0.7010802774994668, 72.65610000000002}, {72.55610000000003, 80.72900000000003, -0.1, 80.72900000000003, 72.65610000000002}, {58.75144100000003, -0.1, 58.670441000000025, -0.1, 58.85144100000003}, {65.29049000000003, 65.29049000000003, 65.20049000000003, 40.26950000000001, 65.39049000000003}};
+		int numActions = payoffs1.length;
+		System.out.println("payoffs1:");
+		for (int a1=0; a1<numActions; a1++) {
+			System.out.println(Arrays.toString(payoffs1[a1]));
+		}
+		System.out.println("payoffs2:");
+		for (int a1=0; a1<numActions; a1++) {
+			System.out.println(Arrays.toString(payoffs2[a1]));
+		}
+		Joint<double[]> strategies = solveForMixedStrategies(payoffs1, payoffs2);
+		System.out.println("player1Strategy: " + strategies.getForPlayer(0));
+		System.out.println("player2Strategy: " + strategies.getForPlayer(1));
+		
+	}
 	
 //	public static void main(String[] args) {
 //		int numPlayers = 2;
@@ -170,7 +190,6 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		// each of its actions.
 		double[][] equilibriumMixedStrategies = new double[numPlayer1Actions][numTotalActions]; 
 		getnash(player1Payoffs, player2Payoffs, equilibriumMixedStrategies, numPlayer1Actions, numPlayer2Actions, numTotalActions);
-		
 		// Get the equilibrium strategies for the two players
 		int equilibriumIdxToConsider = 0; // always consider the first equilibrium found.
 		double[] eqmStrategyForPlayer1 = new double[numPlayer1Actions];
@@ -245,8 +264,6 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		ZList = new int[dimM][2];
 		Q = new double[dimM];
 		
-		
-		
 		/*Transform the payoff matrix into cost matrix*/
 		/* LA = -A , LB = -B */
 		Multiple2(A,LA,row,col,-1); 
@@ -256,7 +273,6 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		for(int k = 0;k<row;k++){
 			AllClear(WList,ZList,Q,LZ,k,dimM);    // initialize 
 			Comp(LA,LB,M,row,col,dimM);
-			
 			getonenash(M,Q,WList,ZList,k,LA,LB,LZ,row,col,dimM); // get one nash solution
 			Multiple1(LZ,Z,dimM,1,k);
 		}
@@ -311,6 +327,8 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 				Pivot(Q,M,j1,r,dimM);
 				if (k==2) QMprint(M,dimM,dimM);
 				while(j1!=-1&&WList[j1][1]!=k){
+					// @sodomka FIXME: It seems we can get stuck in this loop!!! See main method example.
+					//System.out.println("In while loop...");
 					
 					//copy Wlist to oldWlist
 					Multiple2(WList,oldWList,dimM,2,1);  
