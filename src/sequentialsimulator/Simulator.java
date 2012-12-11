@@ -107,7 +107,12 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			//TODO: need to add in transfer payments here!
 			iteration+=1;
 		}
-		System.out.println(rewards);
+		System.out.print("Game rewards: ");
+		for (int playerIdx=0; playerIdx <rewards.size(); playerIdx++) {
+			System.out.printf("%.3f", rewards.get(playerIdx));
+			System.out.print(" ");
+		}
+		System.out.println();
 		return rewards;
 	}
 	
