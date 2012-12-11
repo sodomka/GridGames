@@ -49,7 +49,7 @@ public class SimulateRun {
 			String filenm = "./input/grid7.txt";
 			int numPlay = 2;
 			int numGame = 1;
-			int maxIter = 500;
+			int maxIter = 1000;
 			int maxMove = 20;
 			double gam = .9;
 			sim = new SimulateRun(filenm,numPlay,numGame,maxIter,maxMove,gam);
