@@ -32,7 +32,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 
 	static final int player1Idx = 0;
 	static final int player2Idx = 1;
-	
+	static Random random = new Random(12345);
 	
 	public static void main(String[] args) {
 		//game: {[stick, stick]=[130.91049, 65.39049000000003], [right, right]=[89.81000000000002, -0.1], [stick, up]=[130.91049, 65.29049000000003], [right, up]=[117.62944100000003, 58.75144100000003], [down, down]=[89.81000000000002, 0.7010802774987996], [up, left]=[117.62944100000003, 58.670441000000025], [right, down]=[89.81000000000002, -0.1], [right, stick]=[117.62944100000003, 58.85144100000003], [stick, right]=[40.36950000000001, 40.26950000000001], [left, up]=[145.45610000000002, 72.55610000000003], [up, stick]=[130.81049000000002, 65.39049000000003], [right, left]=[117.62944100000003, 58.670441000000025], [up, down]=[130.81049000000002, 65.29049000000003], [left, stick]=[145.45610000000002, 72.65610000000002], [stick, left]=[130.91049, 65.20049000000003], [down, stick]=[145.45610000000002, 72.65610000000002], [down, left]=[145.45610000000002, -0.1], [left, left]=[145.45610000000002, -0.1], [stick, down]=[130.91049, 65.29049000000003], [down, right]=[89.81000000000003, 0.7010802774994668], [up, right]=[-0.1, 80.72900000000003], [left, right]=[-0.1, 80.72900000000003], [down, up]=[145.45610000000002, 72.55610000000003], [up, up]=[130.81049000000002, 65.29049000000003], [left, down]=[-0.1, 80.72900000000003]}
@@ -519,11 +519,15 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     	min = PostZero;
 
     	// Old method:
-//    	for (int i=0;i<dimM;i++){
-//    		if(R[i]!=PostZero&&R[i]<min){
-//    			min = R[i]; j=i;
-//    		}
-//    	}
+    	boolean oldMethod = false;
+    	if (oldMethod) {
+    		for (int i=0;i<dimM;i++){
+    			if(R[i]!=PostZero&&R[i]<min){
+    				min = R[i]; j=i;
+    			}
+    		}
+    		return j;
+    	}
     	
     	// New method:
     	// Need to handle degenerate cases. See Section 3 in:
@@ -543,7 +547,6 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     	}
     	// Choose amongs the min indices
     	//System.out.println("minIndices=" + minIndices);
-    	Random random = new Random(); // TODO: Don't create a new random every time.
     	int numTies = minIndices.size();
     	if (numTies > 0) {
     		j = minIndices.get( random.nextInt(numTies) );
