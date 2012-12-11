@@ -393,6 +393,8 @@ public class SimpleBoard implements Board {
 
 		// Any actions towards non-occupiable positions result 
 		// in no movement.
+		System.out.println(nextX);
+		System.out.println(nextX);
 		if (!isOccupiablePosition[nextX][nextY]) {
 			nextX = x;
 			nextY = y;

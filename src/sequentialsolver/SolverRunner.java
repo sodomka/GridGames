@@ -30,7 +30,7 @@ public class SolverRunner {
 		double gamma = .9;
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(numIterations, normalFormSolver, gamma);
 
-		String filename = "./input/game2.txt";
+		String filename = "./input/grid4.txt";
 		SimpleBoard board = new SimpleBoard(filename);
 		//Board board = new SimpleBoard(2, 2);
 		int numPlayers = 2;
@@ -39,7 +39,7 @@ public class SolverRunner {
 		System.out.println("POLICY:\n" + policy.toString(.001));
 		
 		//@betsy basic testing
-		Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, game, 1);
+		//Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, game, 1);
 //		Set<GridState> states = policy.keySet();
 //		Iterator<GridState> iter = states.iterator();
 //		GridState state = iter.next();
@@ -47,8 +47,8 @@ public class SolverRunner {
 //		state = iter.next();
 //		state = iter.next();
 		//Joint<GridAction> action = testSim.samplePolicy(state);
-		Joint<Double>rewards = testSim.simulateAgents(2, 10);
-		System.out.println(rewards);
+		//Joint<Double>rewards = testSim.simulateAgents(2, 10);
+		//System.out.println(rewards);
 		
 	}
 	
