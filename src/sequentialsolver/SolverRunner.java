@@ -43,6 +43,11 @@ public class SolverRunner {
 		Map<GridState,Joint<Double>> transfers = policyAndTransfers.getTransfers();
 		
 		System.out.println("POLICY:\n" + policy.toString(.001));
+		System.out.println("TRANSFERS:\n" + transfers.toString());
+		
+		// NOTE: transfer payments are now available for input to the simulator.
+		// For each state, transfers gives a Joint<Double> representing the 
+		// amount of additional utility received by each agent.
 		
 		//@betsy basic testing
 		Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, game, 1);

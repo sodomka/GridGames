@@ -1,4 +1,4 @@
-GAB..H
+GAB.H
 END
 stepcost:-0.1
 A:start_0=True

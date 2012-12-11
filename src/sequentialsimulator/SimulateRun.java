@@ -1,5 +1,7 @@
 package sequentialsimulator;
 
+import java.util.Map;
+
 import normalformsolver.BimatrixHuSolver;
 import normalformsolver.NormalFormSolver;
 import props.Joint;
@@ -10,6 +12,7 @@ import sequentialgame.grid.GridState;
 import sequentialgame.grid.SimpleBoard;
 import sequentialsolver.JointPolicy;
 import sequentialsolver.MultiAgentValueIteration;
+import sequentialsolver.PolicyAndTransfers;
 
 public class SimulateRun {
 
@@ -62,8 +65,11 @@ public class SimulateRun {
 		//Board board = new SimpleBoard(2, 2);
 		
 		SequentialGame<GridState, GridAction> game = new GridGame(numPlayers, board);
-		JointPolicy<GridState,GridAction> policy = valueIteration.generatePolicy(game);
+		PolicyAndTransfers<GridState, GridAction> policyAndTransfers = valueIteration.generatePolicyAndTransfers(game);
+		JointPolicy<GridState,GridAction> policy = policyAndTransfers.getPolicy();
+		Map<GridState,Joint<Double>> transfers = policyAndTransfers.getTransfers();		
 		System.out.println("POLICY:\n" + policy.toString(.001));
+		System.out.println("TRANSFERS:\n" + transfers.toString());
 		
 		//@betsy basic testing
 		System.out.println("Running:" +numGames+" games. "+maxGameMoves+" moves allowed.");
