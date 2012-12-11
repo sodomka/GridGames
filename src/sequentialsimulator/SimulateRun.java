@@ -46,7 +46,7 @@ public class SimulateRun {
 				Integer.parseInt(args[2]),Integer.parseInt(args[3]), 
 				Integer.parseInt(args[4]), Double.parseDouble(args[5]));
 		}else{
-			String filenm = "./input/grid4.txt";
+			String filenm = "./input/grid6.txt";
 			int numPlay = 2;
 			int numGame = 50;
 			int maxIter = 500;
