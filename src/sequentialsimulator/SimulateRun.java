@@ -48,9 +48,9 @@ public class SimulateRun {
 		}else{
 			String filenm = "./input/grid7.txt";
 			int numPlay = 2;
-			int numGame = 1;
+			int numGame = 100;
 			int maxIter = 1000;
-			int maxMove = 20;
+			int maxMove = 200;
 			double gam = .9;
 			sim = new SimulateRun(filenm,numPlay,numGame,maxIter,maxMove,gam);
 		}
@@ -59,17 +59,18 @@ public class SimulateRun {
 	}
 	public void  simulateRun() {
 		
-		//NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
-		NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
+		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
+		//NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(maxSolverIter, normalFormSolver, gamma);
 
 		SimpleBoard board = new SimpleBoard(filename);
 		//Board board = new SimpleBoard(2, 2);
-		
+		//Board board = new SimpleBoard(2, 2);
 		SequentialGame<GridState, GridAction> game = new GridGame(numPlayers, board);
 		PolicyAndTransfers<GridState, GridAction> policyAndTransfers = valueIteration.generatePolicyAndTransfers(game);
 		JointPolicy<GridState,GridAction> policy = policyAndTransfers.getPolicy();
-		Map<GridState,Joint<Double>> transfers = policyAndTransfers.getTransfers();		
+		Map<GridState,Joint<Double>> transfers = policyAndTransfers.getTransfers();
+		
 		System.out.println("POLICY:\n" + policy.toString(.001));
 		System.out.println("TRANSFERS:\n" + transfers.toString());
 		
