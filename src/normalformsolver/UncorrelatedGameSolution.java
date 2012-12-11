@@ -71,7 +71,7 @@ public class UncorrelatedGameSolution<A extends AbstractAction> implements GameS
 	
 	
 	@Override
-	public Joint<Double> getExpectedPayoffs() {
+	public Joint<Double> getExpectedPayoffsWithoutTransfer() {
 		return expectedPayoffs;
 	}
 	

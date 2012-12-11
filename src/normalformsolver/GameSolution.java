@@ -21,7 +21,7 @@ public interface GameSolution<A extends AbstractAction> {
 	DiscreteDistribution<Joint<A>> getJointActionDistribution();
 	
 	// Returns a list of expected payoffs, one per player.
-	Joint<Double> getExpectedPayoffs();
+	Joint<Double> getExpectedPayoffsWithoutTransfer();
 	
 	// Returns a list of transfer payments, one per player
 	Joint<Double> getTransferPayments();
