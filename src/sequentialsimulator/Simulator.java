@@ -62,10 +62,12 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 		
 		//for the number of games specified, run a game and add the results to rewards
 		for(int i=1;i<=numGames; i++){
+			System.out.println("Game: "+i);
 			rewardsTemp = playGame(numIter);
 			for(int r =0;r<rewards.size();r++){
 				rewards.set(r, rewards.get(r)+rewardsTemp.get(r));
 			}
+			System.out.println();
 		}
 		
 		return rewards;
@@ -87,7 +89,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 		for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
 			rewards.add(0.0);
 		}
-		System.out.println(state);
+		//System.out.println(state);
 		int iteration = 0;
 		//until the end of the game, agents take actions
 		while(!game.isTerminalState(state) && iteration<numIterations){

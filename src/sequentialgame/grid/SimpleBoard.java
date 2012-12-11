@@ -87,7 +87,6 @@ public class SimpleBoard implements Board {
 
 		List<String> lines = FileUtils.readLines(filepath);
 		int numLines = lines.size();
-		System.out.println("lines: " + lines);
 		
 		// Get board dimensions
 		this.numXLocations = lines.get(0).length();
@@ -393,8 +392,6 @@ public class SimpleBoard implements Board {
 
 		// Any actions towards non-occupiable positions result 
 		// in no movement.
-		System.out.println(nextX);
-		System.out.println(nextX);
 		if (!isOccupiablePosition[nextX][nextY]) {
 			nextX = x;
 			nextY = y;
