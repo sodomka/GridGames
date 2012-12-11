@@ -1,0 +1,53 @@
+%\documentclass[]{llncs}
+\documentclass[]{article}
+%\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage{amsmath}   
+\usepackage{amssymb}  
+%\usepackage{amsthm}  
+%\usepackage{natbib}
+\usepackage[numbers]{natbib}
+\usepackage{subfigure}
+\usepackage{titling}
+
+\setlength{\droptitle}{-9em} 
+%\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+
+
+% comments
+\long\def\comment#1{}
+\long\def\commente#1{{\bf **Eric: #1**}}
+\long\def\commenta#1{{\bf **Adam: #1**}}
+\long\def\commentb#1{{\bf **Betsy: #1**}}
+
+
+\long\def\commenta#1{}
+\long\def\commente#1{}
+\long\def\commentb#1{}
+
+
+\title{Combining Correlated-Q Learning and Coco Values}
+\author{Adam Abeshouse, Elizabeth Hilliard, Eric Sodomka}
+\date{\vspace{-5ex}}                                          % Activate to display a given date or no date
+
+
+\begin{document}
+\maketitle
+
+
+\input{text/description}
+\pagebreak
+\input{text/figures}
+\pagebreak
+\bibliographystyle{plain}
+\bibliography{CE_Q, COCO}
+
+
+\end{document}  

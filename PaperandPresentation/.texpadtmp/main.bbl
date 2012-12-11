@@ -1,0 +1,34 @@
+\begin{thebibliography}{1}
+
+\bibitem{DBLP:journals/corr/abs-1206-3277}
+Enrique~Munoz de~Cote and Michael~L. Littman.
+\newblock A polynomial-time nash equilibrium algorithm for repeated stochastic
+  games.
+\newblock {\em CoRR}, abs/1206.3277, 2012.
+
+\bibitem{Greenwald03correlated-qlearning}
+Amy Greenwald and Keith Hall.
+\newblock Correlated-q learning.
+\newblock In {\em In AAAI Spring Symposium}, pages 242--249. AAAI Press, 2003.
+
+\bibitem{Greenwald_correlatedq-learning}
+Amy Greenwald, Keith Hall, and Martin Zinkevich.
+\newblock Correlated q-learning, 2005.
+
+\bibitem{Kalai:2011:CTP:1978721.1978725}
+Adam Kalai and Ehud Kalai.
+\newblock Cooperation in two person games, revisited.
+\newblock {\em SIGecom Exch.}, 10(1):13--16, March 2011.
+
+\bibitem{Kalai:2010:CCS:1807342.1807397}
+Adam~Tauman Kalai and Ehud Kalai.
+\newblock Cooperation and competition in strategic games with private
+  information.
+\newblock In {\em Proceedings of the 11th ACM conference on Electronic
+  commerce}, EC '10, pages 345--346, New York, NY, USA, 2010. ACM.
+
+\bibitem{Kalai_acooperative}
+Adam~Tauman Kalai and Ehud Kalai.
+\newblock A cooperative value for bayesian games, 2010.
+
+\end{thebibliography}

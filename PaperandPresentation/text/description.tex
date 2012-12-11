@@ -1,0 +1,21 @@
+
+\section{Introduction}
+\nocite{*}
+
+\hspace{5mm}Reinforcement learning predominantly addresses single-agent learning. There are, however, some efforts to apply the techniques to multiagent scenarios. These settings have real world examples in analogies ranging from robotics to economics. When multiple players interact, game theory is commonly used to model how agents make decisions about how to optimize their actions. We combined an algorithm that applies Q-learning to multiagent settings, Coorelated-Q Learning\cite{Greenwald03correlated-qlearning}(CE-Q) with a new game theoretic cooperative solution concept, coco values\cite{Kalai_acooperative}.
+
+Cooperative and competitive, or coco, values \cite{Kalai:2011:CTP:1978721.1978725, Kalai:2010:CCS:1807342.1807397, Kalai_acooperative} are a solution concept for cooperative games that are proven to produce equilibrium strategies with properties such as pareto optimality, payoff dominance and monotonicity in strategies when applied to traditional bimatrix games. Since correlated-Q learning\cite{Greenwald03correlated-qlearning} and repeated stochastic games\cite{DBLP:journals/corr/abs-1206-3277} use different equilibrium selection concepts we decided to use coco values as a solution concept for multiple agents playing a grid games. 
+
+\section{Implementation}
+\hspace{5mm}We had an implementation of the original CE-Q paper in matlab, but discovered that the grid game implementation was to ridgid and that it was not easily extensible to the correct algorithm for VI. We therefore decided to implement a more general stochastic game solver in Java and a coco value simulator in Python. 
+
+\hspace{5mm}Our implementation makes a few design choices differently than the CE-Q implementation. Learning from the experiences of the authors of Correlated-Q Learning we decided to use value iteration in place of Q-learning, which was used in the paper. This also gives us a chance to compare the effectiveness of the two solution concepts when used for grid games.
+
+We also implemented a more general framework for creating grid games. The CE-Q paper's implementation hardcoded where the barriers could be, did not allow for multiple goals for an agent and could not support arbitrarily shaped boards or an arbitrary number of agents. Our implementation allows for arbitrarily shaped boards, configurable placement of barriers and semi-walls and multiple goals for an agent.
+
+During the implementation encountered several a few in the course of this project. First, we wanted a generalized grid game implementation so that we could test agents on games used in the past as well as games designed to show specific traits of different solution concepts. 
+
+\section{Future Work}
+\hspace{5mm}As this work is a novel combination of a new game-theoretic concept and past work on correlated learning agents in grid games and therefore has many possibilities for future work. We foresee interesting results when these grid games are played with more than three agents who are allowed to coordinate their actions. Another interesting exploration would be to develop more grid games, especially ones with semi-walls. Similarly, it would be interesting to explore the effects of grid games where each agent has multiple goals with different values
+
+A possible different direction would be to conduct experiments on how humans play some of the grid games. It could be informative to examine how allowing, disallowing, encouraging or enforcing side payments would effect the strategies humans choose to adopt and compare the humans' learned behavior and final payoff to those of the coco agents.
