@@ -1,0 +1,10 @@
+AB
+.G
+..
+XH
+END
+stepcost:-0.1
+A:start_0=True
+B:start_1=True;goal_0=200.0
+G:goal_0=1000.0
+H:goal_1=100.0
