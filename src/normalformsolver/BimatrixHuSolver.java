@@ -18,8 +18,11 @@
  */
 package normalformsolver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+
 import props.DiscreteDistribution;
 import props.Joint;
 import sequentialgame.AbstractAction;
@@ -45,8 +48,8 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 			System.out.println(Arrays.toString(payoffs2[a1]));
 		}
 		Joint<double[]> strategies = solveForMixedStrategies(payoffs1, payoffs2);
-		System.out.println("player1Strategy: " + strategies.getForPlayer(0));
-		System.out.println("player2Strategy: " + strategies.getForPlayer(1));
+		System.out.println("player1Strategy: " + Arrays.toString(strategies.getForPlayer(0)));
+		System.out.println("player2Strategy: " + Arrays.toString(strategies.getForPlayer(1)));
 		
 	}
 	
@@ -341,8 +344,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 				Pivot(Q,M,j1,r,dimM);
 				if (k==2) QMprint(M,dimM,dimM);
 				while(j1!=-1&&WList[j1][1]!=k){
-					// @sodomka FIXME: It seems we can get stuck in this loop!!! See main method example.
-					//System.out.println("In while loop...");
+					//System.out.println("In while loop... j1=" + j1 + ", WList[j1][1]=" + WList[j1][1] + ", k=" + k);
 					
 					//copy Wlist to oldWlist
 					Multiple2(WList,oldWList,dimM,2,1);  
@@ -503,26 +505,50 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 	
 	// minumum ratio test
     public static int find_min_ratio(double Q1[],double M1[][], int r, int dimM){
-		double min;
-		double R[];
-		int j=-1;
-		double PostZero = 20000000;
-		R = new double[dimM];
-		
-		//System.out.print("loop in min_ratio   ");
-		for (int i=0;i<dimM;i++){
-	    if (M1[i][r]<-0.00001) R[i] = -Q1[i]/M1[i][r];
-	    else R[i] = PostZero;
-		}
-		min = PostZero;
-		for (int i=0;i<dimM;i++){
-			if(R[i]!=PostZero&&R[i]<min){
-		min = R[i]; j=i;
-			}
-		}
-		return j;
+    	double min;
+    	double R[];
+    	int j=-1;
+    	double PostZero = 20000000;
+    	R = new double[dimM];
+
+    	//System.out.print("loop in min_ratio   ");
+    	for (int i=0;i<dimM;i++){
+    		if (M1[i][r]<-0.00001) R[i] = -Q1[i]/M1[i][r];
+    		else R[i] = PostZero;
+    	}
+    	min = PostZero;
+
+    	// Old method:
+//    	for (int i=0;i<dimM;i++){
+//    		if(R[i]!=PostZero&&R[i]<min){
+//    			min = R[i]; j=i;
+//    		}
+//    	}
+    	
+    	// New method:
+    	// Need to handle degenerate cases. See Section 3 in:
+    	// http://www.public.iastate.edu/~riczw/MEGliter/general/Lemkehowson.pdf
+    	// Break ties randomly
+    	List<Integer> minIndices = new ArrayList<Integer>();
+    	double myMin = PostZero;
+    	for (int i=0;i<dimM;i++){
+    		if(R[i]!=PostZero&&R[i]<=myMin){
+    			myMin = R[i];
+    			// If strictly lower, clear out old mins
+    			if (R[i]<myMin) {
+    				minIndices.clear();
+    			}
+    			minIndices.add(i);
+    		}
+    	}
+    	// Choose amongs the min indices
+    	//System.out.println("minIndices=" + minIndices);
+    	Random random = new Random(); // TODO: Don't create a new random every time.
+    	j = minIndices.get( random.nextInt(minIndices.size()) );
+    	
+    	return j;
     }
-	
+
 	// returns the position index of the complement of Wlistj in Zlist 
     public static int find_complement(int j,int WList1[][],int ZList1[][], int dimM){
 		int l = -1;
