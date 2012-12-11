@@ -61,14 +61,27 @@ public class BimatrixCocoSolver<A extends AbstractAction> implements NormalFormS
 		double player1CompetitiveExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player1CompetitivePayoffs, jointCompetitiveStrategy);
 		double player2CompetitiveExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player2CompetitivePayoffs, jointCompetitiveStrategy);
 		
-		// Solution is to follow the cooperative strategy.
-		// Competitive strategy payoffs define the transfer utility.
-		Joint<Double> transferPayments = new Joint<Double>();
-		transferPayments.add(player1CompetitiveExpectedPayoff);
-		transferPayments.add(player2CompetitiveExpectedPayoff);
+		// Compute coco values
+		double player1CoCoVal = player1CooperativeExpectedPayoff + player1CompetitiveExpectedPayoff;
+		double player2CoCoVal = player2CooperativeExpectedPayoff + player2CompetitiveExpectedPayoff;
+
+		// Compute agents' actual payoffs for following cooperative strategy
+		double player1ActualExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player1Payoffs, jointCooperativeStrategy);
+		double player2ActualExpectedPayoff = BimatrixHuSolver.getExpectedPayoffsForPlayer(player2Payoffs, jointCooperativeStrategy);
+		Joint<Double> expectedPayoffs = new Joint<Double>();
+		expectedPayoffs.add(player1ActualExpectedPayoff);
+		expectedPayoffs.add(player2ActualExpectedPayoff);
 		
+		// Compute transfer payments
+		double player1TransferPayments = player1CoCoVal - player1ActualExpectedPayoff;
+		double player2TransferPayments = player2CoCoVal - player2ActualExpectedPayoff;
+		Joint<Double> transferPayments = new Joint<Double>();
+		transferPayments.add(player1TransferPayments);
+		transferPayments.add(player2TransferPayments);
+		
+		// Solution is to follow the cooperative strategy.
 		DiscreteDistribution<Joint<A>> jointStrategy = BimatrixHuSolver.getJointStrategyFromIndependentStrategies(normalFormGame, player1CooperativeStrategy, player2CooperativeStrategy);
-		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy, transferPayments);
+		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy, expectedPayoffs, transferPayments);
 
 		return solution;
 	}

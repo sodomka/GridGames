@@ -26,4 +26,6 @@ public interface GameSolution<A extends AbstractAction> {
 	// Returns a list of transfer payments, one per player
 	Joint<Double> getTransferPayments();
 	
+	Joint<Double> getExpectedPayoffsWithTransfer();
+	
 }

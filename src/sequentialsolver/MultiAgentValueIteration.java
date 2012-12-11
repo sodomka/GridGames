@@ -160,7 +160,7 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 				
 				// Update values at this state. We don't put the updates into the main value function yet
 				// since we want other states to use the old value function.
-				Joint<Double> expectedPayoffs = gameSolution.getExpectedPayoffs();
+				Joint<Double> expectedPayoffs = gameSolution.getExpectedPayoffsWithTransfer();
 				updatedJointValueFunction.put(state, expectedPayoffs);
 				
 				// Update policy at this state.

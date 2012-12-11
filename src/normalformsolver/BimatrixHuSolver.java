@@ -100,12 +100,20 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
 		double[] player2StrategyArr = mixedStrategyPerPlayer.getForPlayer(player2Idx);
 		DiscreteDistribution<Joint<A>> jointStrategy = getJointStrategyFromIndependentStrategies(normalFormGame, player1StrategyArr, player2StrategyArr);
 
+		// Compute expected payoffs		
+		double[][] jointOutcome = getDistributionOverJointActions(player1StrategyArr, player2StrategyArr);
+		double player1ActualExpectedPayoff = getExpectedPayoffsForPlayer(player1Payoffs, jointOutcome);
+		double player2ActualExpectedPayoff = getExpectedPayoffsForPlayer(player2Payoffs, jointOutcome);
+		Joint<Double> expectedPayoffs = new Joint<Double>();
+		expectedPayoffs.add(player1ActualExpectedPayoff);
+		expectedPayoffs.add(player2ActualExpectedPayoff);
+		
 		// No transfer payments
 		Joint<Double> transferPayments = new Joint<Double>();
 		transferPayments.add(0.0);
 		transferPayments.add(0.0);
 		
-		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy, transferPayments);
+		GameSolution<A> solution = new UncorrelatedGameSolution<A>(normalFormGame, jointStrategy, expectedPayoffs, transferPayments);
 		return solution;
 	}
 

@@ -18,14 +18,22 @@ public class UncorrelatedGameSolution<A extends AbstractAction> implements GameS
 	
 	DiscreteDistribution<Joint<A>> jointActionDistribution;
 	NormalFormGame<A> game;
+	Joint<Double> expectedPayoffs;
 	Joint<Double> transferPayments;
 	
 	
-	public UncorrelatedGameSolution(NormalFormGame<A> game, DiscreteDistribution<Joint<A>> jointActionDistribution, Joint<Double> transferPayments) {
+	public UncorrelatedGameSolution(NormalFormGame<A> game, DiscreteDistribution<Joint<A>> jointActionDistribution, Joint<Double> expectedPayoffs, Joint<Double> transferPayments) {
 		this.game = game;
 		this.jointActionDistribution = jointActionDistribution;
-		this.transferPayments = transferPayments;
+		this.expectedPayoffs = expectedPayoffs;
+		this.transferPayments = transferPayments;		
 	}
+	
+//	public UncorrelatedGameSolution(NormalFormGame<A> game, DiscreteDistribution<Joint<A>> jointActionDistribution, Joint<Double> transferPayments) {
+//		this.game = game;
+//		this.jointActionDistribution = jointActionDistribution;
+//		this.transferPayments = transferPayments;
+//	}
 	
 	
 	// FIXME: Passing marginal distributions into the constructor currently 
@@ -50,27 +58,46 @@ public class UncorrelatedGameSolution<A extends AbstractAction> implements GameS
 	}
 
 	@Override
-	public Joint<Double> getExpectedPayoffs() {
-
-		// Initialize expected payoffs to equal transfer payments for each player.
-		Joint<Double> expectedReward = new Joint<Double>();
+	public Joint<Double> getExpectedPayoffsWithTransfer() {
+		Joint<Double> totalPayoff = new Joint<Double>();
 		for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
 			//expectedReward.add(0.0);
-			expectedReward.add(transferPayments.getForPlayer(playerIdx));
+			double reward = expectedPayoffs.getForPlayer(playerIdx);
+			double transfer = transferPayments.getForPlayer(playerIdx);
+			totalPayoff.add(reward+transfer);
 		}
-		
-		// Compute expected payoffs
-		for (Joint<A> jointActions : game.getPossibleJointActions()) {
-			Joint<Double> payoffsForJointAction = game.getPayoffsForJointAction(jointActions);
-			double probAction = jointActionDistribution.get(jointActions);
-			for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
-				expectedReward.set(playerIdx, expectedReward.get(playerIdx) + 
-						probAction * payoffsForJointAction.getForPlayer(playerIdx));
-			}
-		}
-		
-		return expectedReward;
+		return totalPayoff;
 	}
+	
+	
+	@Override
+	public Joint<Double> getExpectedPayoffs() {
+		return expectedPayoffs;
+	}
+	
+	
+//	@Override
+//	public Joint<Double> getExpectedPayoffs() {
+//
+//		// Initialize expected payoffs to equal transfer payments for each player.
+//		Joint<Double> expectedReward = new Joint<Double>();
+//		for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
+//			//expectedReward.add(0.0);
+//			expectedReward.add(transferPayments.getForPlayer(playerIdx));
+//		}
+//		
+//		// Compute expected payoffs
+//		for (Joint<A> jointActions : game.getPossibleJointActions()) {
+//			Joint<Double> payoffsForJointAction = game.getPayoffsForJointAction(jointActions);
+//			double probAction = jointActionDistribution.get(jointActions);
+//			for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
+//				expectedReward.set(playerIdx, expectedReward.get(playerIdx) + 
+//						probAction * payoffsForJointAction.getForPlayer(playerIdx));
+//			}
+//		}
+//		
+//		return expectedReward;
+//	}
 
 
 	@Override
