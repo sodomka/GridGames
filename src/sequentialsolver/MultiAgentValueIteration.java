@@ -119,10 +119,35 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 				DiscreteDistribution<Joint<A>> jointActionDistribution = gameSolution.getJointActionDistribution();
 				jointPolicy.put(state, jointActionDistribution);
 			}
+			
+			// Compare value function to the previous iteration's.
+			double valueFunctionDiff = getValueFunctionDifference(jointValueFunction, updatedJointValueFunction);
+			System.out.println("iteration=" + iteration + ", valueFunctionDiff=" + valueFunctionDiff);
+			
 			// Now that all states have been considered, update the value function.
 			jointValueFunction = updatedJointValueFunction;
 		}
 		return jointPolicy;
+	}
+
+	private double getValueFunctionDifference(
+			JointValueFunction<S> jointValueFunction,
+			JointValueFunction<S> updatedJointValueFunction) {
+		double maxAbsoluteDifference = 0;
+		for (S state : jointValueFunction.keySet()) {
+			Joint<Double> perAgentValuesAtState = jointValueFunction.get(state);
+			Joint<Double> updatedPerAgentValuesAtState = updatedJointValueFunction.get(state);
+			int numPlayers = perAgentValuesAtState.size();
+			for (int playerIdx=0; playerIdx < numPlayers; playerIdx++) {
+				double value = perAgentValuesAtState.getForPlayer(playerIdx);
+				double updatedValue = updatedPerAgentValuesAtState.getForPlayer(playerIdx);
+				double absoluteDifference = Math.abs(value - updatedValue);
+				if (absoluteDifference > maxAbsoluteDifference) {
+					maxAbsoluteDifference = absoluteDifference;
+				}
+			}
+		}
+		return maxAbsoluteDifference;
 	}
 
 	private NormalFormGame<A> createNormalFormGame(
