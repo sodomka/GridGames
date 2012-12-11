@@ -2,6 +2,7 @@ package sequentialsimulator;
 
 import java.util.Map;
 
+import normalformsolver.BimatrixCocoSolver;
 import normalformsolver.BimatrixHuSolver;
 import normalformsolver.NormalFormSolver;
 import props.Joint;
@@ -45,11 +46,11 @@ public class SimulateRun {
 				Integer.parseInt(args[2]),Integer.parseInt(args[3]), 
 				Integer.parseInt(args[4]), Double.parseDouble(args[5]));
 		}else{
-			String filenm = "./input/grid4.txt";
+			String filenm = "./input/game2.txt";
 			int numPlay = 2;
-			int numGame = 100;
-			int maxIter = 100;
-			int maxMove = 2;
+			int numGame = 10;
+			int maxIter = 50;
+			int maxMove = 20;
 			double gam = .9;
 			sim = new SimulateRun(filenm,numPlay,numGame,maxIter,maxMove,gam);
 		}
@@ -58,7 +59,8 @@ public class SimulateRun {
 	}
 	public void  simulateRun() {
 		
-		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
+		//NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
+		NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(maxSolverIter, normalFormSolver, gamma);
 
 		SimpleBoard board = new SimpleBoard(filename);
@@ -73,13 +75,13 @@ public class SimulateRun {
 		
 		//@betsy basic testing
 		System.out.println("Running:" +numGames+" games. "+maxGameMoves+" moves allowed.");
-		Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, game, 1);
+		Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, transfers, game, 1);
 		
-		Joint<Double>rewards = testSim.simulateAgents(numGames, maxGameMoves);
+		Joint<Double> payoff = testSim.simulateAgents(numGames, maxGameMoves);
 		System.out.println("Ran:" +numGames+" games "+maxGameMoves+" moves per game were allowed.");
-		System.out.print("Average Rewards: ");
-		for (int playerIdx=0; playerIdx <rewards.size(); playerIdx++) {
-			System.out.printf("%.3f", rewards.get(playerIdx)/numGames);
+		System.out.print("Average Payoff: ");
+		for (int playerIdx=0; playerIdx <payoff.size(); playerIdx++) {
+			System.out.printf("%.3f", payoff.get(playerIdx)/numGames);
 			System.out.print(" ");
 		}
 		System.out.println();

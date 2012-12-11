@@ -50,7 +50,7 @@ public class SolverRunner {
 		// amount of additional utility received by each agent.
 		
 		//@betsy basic testing
-		Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, game, 1);
+		Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, transfers, game, 1);
 //		Set<GridState> states = policy.keySet();
 //		Iterator<GridState> iter = states.iterator();
 //		GridState state = iter.next();

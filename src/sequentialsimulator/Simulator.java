@@ -5,10 +5,12 @@ import props.Joint;
 import sequentialgame.AbstractAction;
 import sequentialgame.AbstractState;
 import sequentialgame.SequentialGame;
+import sequentialgame.grid.GridState;
 import sequentialsolver.JointPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -25,11 +27,14 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 	
 	private int numGames;
 	private JointPolicy<S,A> policy;
+	private Map<S,Joint<Double>> transfers;
 	SequentialGame<S,A> game;
 	
 	
-	public Simulator(JointPolicy<S, A> policy, SequentialGame<S,A> game, int numGames){
+	public Simulator(JointPolicy<S, A> policy, Map<S,Joint<Double>> transfers, 
+			SequentialGame<S,A> game, int numGames){
 		this.policy = policy;
+		this.transfers = transfers;
 		this.game = game;
 		this.numGames = numGames;
 		
@@ -104,7 +109,7 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			}
 			state = nextState;
 			System.out.println("Next "+state);
-			//TODO: need to add in transfer payments here!
+			System.out.println(transfers.get(state));
 			iteration+=1;
 		}
 		System.out.print("Game rewards: ");
