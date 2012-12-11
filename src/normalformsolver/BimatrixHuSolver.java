@@ -544,8 +544,10 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     	// Choose amongs the min indices
     	//System.out.println("minIndices=" + minIndices);
     	Random random = new Random(); // TODO: Don't create a new random every time.
-    	j = minIndices.get( random.nextInt(minIndices.size()) );
-    	
+    	int numTies = minIndices.size();
+    	if (numTies > 0) {
+    		j = minIndices.get( random.nextInt(numTies) );
+    	}
     	return j;
     }
 
