@@ -30,7 +30,7 @@ public class SolverRunner {
 		double gamma = .9;
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(numIterations, normalFormSolver, gamma);
 
-		String filename = "./input/grid8.txt";
+		String filename = "./input/grid2.txt";
 		SimpleBoard board = new SimpleBoard(filename);
 		//Board board = new SimpleBoard(2, 2);
 		int numPlayers = 2;
