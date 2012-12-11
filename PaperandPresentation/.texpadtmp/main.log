@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  11 DEC 2012 11:05
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  11 DEC 2012 12:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -261,9 +261,10 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 42.
 (/usr/local/texlive/2011/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-(./text/description.tex) (./text/figures.tex [1
+(./text/description.tex) [1
 
-{/usr/local/texlive/2011/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+{/usr/local/texlive/2011/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./text
+/figures.tex
 <text/pic_CEQ.pdf, id=10, 971.95126pt x 349.00156pt>
 File: text/pic_CEQ.pdf Graphic file (type pdf)
  <use text/pic_CEQ.pdf>
@@ -301,7 +302,7 @@ local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/loc
 al/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
 l/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
 Output written on /Users/ehilliard/workspace/GridGames/PaperandPresentation/.te
-xpadtmp/main.pdf (3 pages, 942520 bytes).
+xpadtmp/main.pdf (3 pages, 942217 bytes).
 PDF statistics:
  4324 PDF objects out of 5155 (max. 8388607)
  2168 compressed objects within 22 object streams

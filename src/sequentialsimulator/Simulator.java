@@ -113,7 +113,10 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			for(int i =0;i<rewards.size();i++){
 				rewards.set(i, rewards.get(i)+rewardsTemp.get(i));
 				payoffs.set(i, rewards.get(i)+payoffsTemp.get(i));
+				//System.out.println("up: "+ rewards.get(i));
+				//System.out.println("up2:"+payoffsTemp.get(i));
 			}
+			System.out.println(payoffs);
 			state = nextState;
 			System.out.println("Next "+state);
 			

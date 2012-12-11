@@ -531,7 +531,7 @@ public class BimatrixHuSolver<A extends AbstractAction> implements NormalFormSol
     	min = PostZero;
 
     	// Old method:
-    	boolean oldMethod = false;
+    	boolean oldMethod = true;
     	if (oldMethod) {
     		for (int i=0;i<dimM;i++){
     			if(R[i]!=PostZero&&R[i]<min){
