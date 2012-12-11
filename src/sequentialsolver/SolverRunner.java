@@ -29,11 +29,14 @@ public class SolverRunner {
 		NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
 		double gamma = .9;
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(numIterations, normalFormSolver, gamma);
-		Board board = new SimpleBoard(2, 2);
+
+		String filename = "./input/game2.txt";
+		SimpleBoard board = new SimpleBoard(filename);
+		//Board board = new SimpleBoard(2, 2);
 		int numPlayers = 2;
 		SequentialGame<GridState, GridAction> game = new GridGame(numPlayers, board);
 		JointPolicy<GridState,GridAction> policy = valueIteration.generatePolicy(game);
-		System.out.println("POLICY:" + policy);
+		System.out.println("POLICY:\n" + policy.toString(.001));
 		
 		//@betsy basic testing
 		Simulator<GridState,GridAction> testSim = new Simulator<GridState,GridAction>(policy, game, 1);

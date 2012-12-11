@@ -62,14 +62,9 @@ public class SimpleBoard implements Board {
 
 	/**
 	 * For each player, a list of positions for which
-	 * a goal is located.
+	 * a goal is located and the reward associated with that goal.
 	 */
 	private Joint<Map<Position, Double>> goalPositionsAndRewardsPerPlayer;
-
-	/**
-	 * The immediate reward a player receives for reaching a goal position. 
-	 */
-	private double goalReward = 100;
 	
 	/**
 	 * The immediate reward a player receives for taking a non-stick action.
@@ -210,20 +205,21 @@ public class SimpleBoard implements Board {
 		this.occupiablePositions = this.computeOccupiablePositions();
 		this.allowableActions = this.computeAllowableActions();
 		
-//		System.out.println("goalPositions: " + goalPositionsAndRewardsPerPlayer);
-//		System.out.println("initialPositions: " + initialPositions);
-//		System.out.println("isOccupiablePosition: " + Arrays.deepToString(isOccupiablePosition));
-//		System.out.println("upMovementSuccessProbability" + Arrays.deepToString(upMovementSuccessProbability));
-//		System.out.println("downMovementSuccessProbability" + Arrays.deepToString(downMovementSuccessProbability));
-//		System.out.println("leftMovementSuccessProbability" + Arrays.deepToString(leftMovementSuccessProbability));
-//		System.out.println("rightMovementSuccessProbability" + Arrays.deepToString(rightMovementSuccessProbability));
-//		System.out.println("is 0,0 occupiable: " + isOccupiablePosition[0][0]);
+		System.out.println("goalPositions: " + goalPositionsAndRewardsPerPlayer);
+		System.out.println("initialPositions: " + initialPositions);
+		System.out.println("isOccupiablePosition: " + Arrays.deepToString(isOccupiablePosition));
+		System.out.println("upMovementSuccessProbability" + Arrays.deepToString(upMovementSuccessProbability));
+		System.out.println("downMovementSuccessProbability" + Arrays.deepToString(downMovementSuccessProbability));
+		System.out.println("leftMovementSuccessProbability" + Arrays.deepToString(leftMovementSuccessProbability));
+		System.out.println("rightMovementSuccessProbability" + Arrays.deepToString(rightMovementSuccessProbability));
+		System.out.println("is 0,0 occupiable: " + isOccupiablePosition[0][0]);
 	}
 	
 	
 	
 	public static void main(String[] args) {
-		String filename = "/Users/sodomka/Dropbox/myDocs/repositories/github/GridGames/input/game1.txt";
+		//String filename = "/Users/sodomka/Dropbox/myDocs/repositories/github/GridGames/input/game1.txt";
+		String filename = "./input/game2.txt";
 		SimpleBoard board = new SimpleBoard(filename);
 	}
 

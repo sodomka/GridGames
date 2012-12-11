@@ -142,7 +142,9 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 			// (i.e., compute expected payoffs for this cell of the normal form game.)
 			Joint<Double> payoffs = createInitialPayoffs(g.getNumPlayers());
 			DiscreteDistribution<S> nextStateDistribution = g.getTransitionProbabilities(currentState, jointAction);
+			//System.out.println("state=" + currentState + ", action=" + jointAction + ", next state distribution: " + nextStateDistribution);
 			for (S nextState : nextStateDistribution.keySet()) {
+				//System.out.println("  nextState=" + nextState);
 				double nextStateProb = nextStateDistribution.get(nextState);
 				Joint<Double> immediateRewards = g.getImmediateRewards(currentState, jointAction, nextState);
 				Joint<Double> nextStateValues = v.getJointValuesForState(nextState);
@@ -177,6 +179,7 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 			double nextStateProb, List<Double> immediateRewards,
 			List<Double> nextStateValues, double gamma) {
 		int numPlayers = payoffs.size();
+		//System.out.println("   payoffs=" + payoffs + ", reward=" + immediateRewards + ", nextVal=" + nextStateValues);
 		for (int playerIdx=0; playerIdx<numPlayers; playerIdx++) {
 			double oldPayoff = payoffs.get(playerIdx);
 			double additionalPayoff = nextStateProb * 
