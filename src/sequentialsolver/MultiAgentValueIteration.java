@@ -172,6 +172,20 @@ public class MultiAgentValueIteration<S extends AbstractState, A extends Abstrac
 				// (all transfer payments should sum to 0).
 				Joint<Double> transferPayments = gameSolution.getTransferPayments();
 				jointTransfers.put(state, transferPayments);
+
+				//DEBUG
+				DiscreteDistribution<Joint<A>> reducedJointActionDistribution = new DiscreteDistribution<Joint<A>>();
+				double minProb = .001;
+				for (Joint<A> jointAction : jointActionDistribution.keySet()) {
+					double prob = jointActionDistribution.get(jointAction);
+					if (prob > minProb) {
+						reducedJointActionDistribution.put(jointAction, prob);
+					}
+				}
+				Joint<Double> expectedPayoffsWithoutTransfer = gameSolution.getExpectedPayoffsWithoutTransfer();
+				//System.out.println("i=" + iteration + ", state=" + state + ", action=" + reducedJointActionDistribution + ", payoffs=" + expectedPayoffsWithoutTransfer + ", transfers=" + transferPayments + ", total=" + expectedPayoffs);
+				//END DEBUG
+
 				
 			}
 			

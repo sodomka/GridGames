@@ -40,4 +40,17 @@ public class JointPolicy<S extends AbstractState, A extends AbstractAction> exte
 		}
 		return sb.toString();
 	}
+	
+	public String policyAtStateToString(S state, double epsilon) {
+		StringBuffer sb = new StringBuffer();
+			sb.append(state + " : " );
+			DiscreteDistribution<Joint<A>> distribution = this.get(state);
+			for (Joint<A> jointAction : distribution.keySet()) {
+				double prob = distribution.get(jointAction);
+				if (prob >= epsilon) {
+					sb.append(jointAction + "=" + prob + ", ");
+				}
+			}
+		return sb.toString();		
+	}
 }
