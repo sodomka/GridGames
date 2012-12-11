@@ -1,13 +1,16 @@
 package sequentialgame.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import props.DiscreteDistribution;
 import props.Joint;
 import utils.FileUtils;
+import utils.StringUtils;
 
 /**
  * An implementation of a simple rectangular board.
@@ -28,13 +31,10 @@ public class SimpleBoard implements Board {
 	/**
 	 * The board dimensions.
 	 */
-
-
-	
-	private Joint<Position> initialPositions;
-
 	private int numXLocations = 0;
 	private int numYLocations = 0;
+	
+	private Joint<Position> initialPositions;
 
 	/**
 	 * Arrays specifying the probability of successfully moving
@@ -64,13 +64,13 @@ public class SimpleBoard implements Board {
 	 * For each player, a list of positions for which
 	 * a goal is located.
 	 */
-	private Joint<List<Position>> goalPositionsPerPlayer;
+	private Joint<Map<Position, Double>> goalPositionsAndRewardsPerPlayer;
 
 	/**
 	 * The immediate reward a player receives for reaching a goal position. 
 	 */
 	private double goalReward = 100;
-
+	
 	/**
 	 * The immediate reward a player receives for taking a non-stick action.
 	 * This is typically negative.
@@ -78,17 +78,33 @@ public class SimpleBoard implements Board {
 	private double stepReward = -1;
 
 	public SimpleBoard(String filepath) {
+		
+		final Character notOccupiableChar = 'X';
+		final Character occupiableChar = '.';
+		final String boardEndString = "END";
+		final String referenceIdSeparator = ":";
+		final String keyValueSeparator = "=";
+		final String pairSeparator = ";";
+		final String goalPrefix = "goal";
+		final String startPrefix = "start";
+		final String wallPrefix = "wall";
+		final String goalStartWallSeparator = "_";
+
 		List<String> lines = FileUtils.readLines(filepath);
-		//first, get board dimensions
-		for(String s: lines) {
-			if(s.replaceAll("\\n","").equals("END")) {
+		int numLines = lines.size();
+		System.out.println("lines: " + lines);
+		
+		// Get board dimensions
+		this.numXLocations = lines.get(0).length();
+		this.numYLocations = 0;
+		for (String line : lines) {
+			if (line.equalsIgnoreCase(boardEndString)) {
 				break;
-			} else {
-				this.numYLocations++;
-				this.numXLocations = s.length();
 			}
+			this.numYLocations++;
 		}
-		//set defaults
+		
+		// Set defaults
 		this.isOccupiablePosition = new boolean[numXLocations][numYLocations];
 		this.upMovementSuccessProbability = new double[numXLocations][numYLocations];
 		this.downMovementSuccessProbability = new double[numXLocations][numYLocations];
@@ -103,67 +119,112 @@ public class SimpleBoard implements Board {
 				rightMovementSuccessProbability[x][y] = 1;
 			}
 		}
-		//load actual info
-		boolean atInfo = false;
-		HashMap<Character, String> references = new HashMap<Character, String>();
-		for(int y=0;y<lines.size();y++) {
-			if(!atInfo) {
-				if(lines.get(y).replaceAll("\\n", "").equals("END")) {
-					atInfo = true;
-					continue;
-				}
-				// collect references
-				for(int x=0;x<lines.get(y).length();x++) {
-					char c = lines.get(y).charAt(x);
-					if(c=='X') {
-						this.isOccupiablePosition[x][lines.size()-y] = false;
-					} else if(c!='N') {
-						references.put(c, x+","+y);
-					}
-				}
-			} else {
-				String id = lines.get(y).split(":")[0];
-				String info = lines.get(y).split(":")[1];
-				if(id.equals("step reward")) {
-					this.stepReward = Double.parseDouble(info);
-				} else {
-					String[] allSettings = info.split(";");
-					String[][] settings = new String[allSettings.length][2];
-					int xCoord = Integer.parseInt(references.get(id).split(",")[0]);
-					int yCoord = lines.size() - Integer.parseInt(references.get(id).split(",")[1]);
-					List<Position> p1Goals = new ArrayList<Position>();
-					List<Position> p2Goals = new ArrayList<Position>();
-					for(int i=0;i<allSettings.length;i++) {
-						settings[i] = allSettings[i].split("=");
-					}
-					for(String[] setting: settings) {
-						String name = setting[0];
-						double value = Double.parseDouble(setting[1]);
-						if(name.equals("wall_left")) {
-							this.leftMovementSuccessProbability[xCoord][yCoord] = Double.parseDouble(info);
-						} else if(name.equals("wall_right")) {
-							this.rightMovementSuccessProbability[xCoord][yCoord] = Double.parseDouble(info);
-						} else if(name.equals("wall_up")) {
-							this.upMovementSuccessProbability[xCoord][yCoord] = Double.parseDouble(info);
-						} else if(name.equals("wall_down")) {
-							this.downMovementSuccessProbability[xCoord][yCoord] = Double.parseDouble(info);
-						} else if(name.equals("goal_a")) { //TODO: add arbitrary numbers of players
-							p1Goals.add(new Position(xCoord, yCoord));
-						} else if(name.equals("goal_b")) { 
-							p2Goals.add(new Position(xCoord, yCoord));
-						} else if(name.equals("start_a")) {
-							//TODO: set start
-						} else if(name.equals("start_b")) {
-							//TODO: set end
-						}
-					}
+		
+		// Read board. Update information about occupiable states,
+		// and keep track of references (about goal locations, etc.) to handle later.
+		HashMap<Character, Position> referencePositions = new HashMap<Character, Position>();
+		for (int lineIdx=0; lineIdx<numYLocations; lineIdx++) {
+			for (int charIdx=0; charIdx<numXLocations; charIdx++) {
+				// Position (x=0, y=0) is the lower-left corner.
+				int x = charIdx;
+				int y = numYLocations - lineIdx - 1;
+				char character = lines.get(lineIdx).charAt(charIdx);
+				if (character == notOccupiableChar) {
+					isOccupiablePosition[x][y] = false;
+				} else if (character != occupiableChar) {
+					// Character is neither the occupiable nor the unoccupiable symbol;
+					// it must therefore be a reference.
+					referencePositions.put(character, new Position(x, y));
 				}
 			}
 		}
-
+		
+		// Board has been read. Get step reward.
+		int costLineIdx = numYLocations+1; // skip the END line.
+		String costString = lines.get(costLineIdx);
+		stepReward = Double.parseDouble(costString.split(referenceIdSeparator)[1]);
+		
+		// Get information from additional references
+		Map<Integer, Map<Position, Double>> positionRewardsForPlayer = new HashMap<Integer, Map<Position, Double>>(); // Map<PlayerIdx>, Map<Position, Reward>
+		Map<Integer, Position> startingPositionForPlayer = new HashMap<Integer, Position>();
+		int referenceStartingIdx = costLineIdx+1;
+		for (int referenceIdx=referenceStartingIdx; referenceIdx<numLines; referenceIdx++) {
+			String line = lines.get(referenceIdx);
+			Character referenceId = line.split(referenceIdSeparator)[0].charAt(0);
+			Position referencePosition = referencePositions.get(referenceId);
+			String referenceInfo = line.split(referenceIdSeparator)[1];
+			// Iterate through reference information (key-value pairs) for this reference id
+			Map<String, String> keyValuePairs = StringUtils.ParseKeyValuePairs(referenceInfo, keyValueSeparator, pairSeparator);
+			System.out.println("referenceId=" + referenceId + ", keyValuePairs=" + keyValuePairs);
+			for (String key : keyValuePairs.keySet()) {
+				String value = keyValuePairs.get(key);
+				if (key.startsWith(goalPrefix)) {
+					Integer playerIdx = new Integer(key.split(goalStartWallSeparator)[1]);
+					Double goalValue = new Double(value);
+					if (!positionRewardsForPlayer.containsKey(playerIdx)) {
+						positionRewardsForPlayer.put(playerIdx, new HashMap<Position, Double>());
+					}
+					Map<Position,Double> positionRewards = positionRewardsForPlayer.get(playerIdx);
+					positionRewards.put(referencePosition, goalValue);
+				} else if (key.startsWith(startPrefix)) {
+					Integer playerIdx = new Integer(key.split(goalStartWallSeparator)[1]);
+					startingPositionForPlayer.put(playerIdx, referencePosition);
+				} else if (key.startsWith(wallPrefix)) {
+					String wallDirection = key.split(goalStartWallSeparator)[1];
+					Double wallSuccessProb = new Double(value);
+					if (wallDirection.equalsIgnoreCase("up")) {
+						upMovementSuccessProbability[referencePosition.getX()][referencePosition.getY()] = wallSuccessProb;
+					} else if (wallDirection.equalsIgnoreCase("down")) {
+						downMovementSuccessProbability[referencePosition.getX()][referencePosition.getY()] = wallSuccessProb;
+					} else if (wallDirection.equalsIgnoreCase("left")) {
+						leftMovementSuccessProbability[referencePosition.getX()][referencePosition.getY()] = wallSuccessProb;
+					}else if (wallDirection.equalsIgnoreCase("right")) {
+						rightMovementSuccessProbability[referencePosition.getX()][referencePosition.getY()] = wallSuccessProb;
+					} else {
+						System.err.println("Error reading wall direction.");						
+					}
+				} else {
+					System.err.println("Error reading character.");
+				}
+			}
+		}
+		
+		// Get the maximum player index. 
+		// It will be assumed that all player indices between 0 and the max have been specified.
+		Integer maxPlayerIdx = 0;
+		for (Integer playerIdx : startingPositionForPlayer.keySet()) {
+			if (playerIdx > maxPlayerIdx) {
+				maxPlayerIdx = playerIdx;
+			}
+		}
+		
+		System.out.println("initialPosForPla=" + startingPositionForPlayer);
+		// Put information about position rewards and starting positions into the relevant data structures.
+		goalPositionsAndRewardsPerPlayer = new Joint<Map<Position, Double>>();
+		initialPositions = new Joint<Position>();
+		for (int playerIdx=0; playerIdx<=maxPlayerIdx; playerIdx++) {
+			goalPositionsAndRewardsPerPlayer.add(positionRewardsForPlayer.get(playerIdx));
+			initialPositions.add(startingPositionForPlayer.get(playerIdx));
+		}
+		
 		this.occupiablePositions = this.computeOccupiablePositions();
 		this.allowableActions = this.computeAllowableActions();
-
+		
+//		System.out.println("goalPositions: " + goalPositionsAndRewardsPerPlayer);
+//		System.out.println("initialPositions: " + initialPositions);
+//		System.out.println("isOccupiablePosition: " + Arrays.deepToString(isOccupiablePosition));
+//		System.out.println("upMovementSuccessProbability" + Arrays.deepToString(upMovementSuccessProbability));
+//		System.out.println("downMovementSuccessProbability" + Arrays.deepToString(downMovementSuccessProbability));
+//		System.out.println("leftMovementSuccessProbability" + Arrays.deepToString(leftMovementSuccessProbability));
+//		System.out.println("rightMovementSuccessProbability" + Arrays.deepToString(rightMovementSuccessProbability));
+//		System.out.println("is 0,0 occupiable: " + isOccupiablePosition[0][0]);
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		String filename = "/Users/sodomka/Dropbox/myDocs/repositories/github/GridGames/input/game1.txt";
+		SimpleBoard board = new SimpleBoard(filename);
 	}
 
 	public SimpleBoard(int numXLocations, int numYLocations) {
@@ -185,16 +246,16 @@ public class SimpleBoard implements Board {
 		}
 		occupiablePositions = computeOccupiablePositions();
 		allowableActions = computeAllowableActions();
-		goalPositionsPerPlayer = new Joint<List<Position>>();
+		goalPositionsAndRewardsPerPlayer = new Joint<Map<Position, Double>>();
 
 		//TODO: Make this more general!!!
 		// By default, create a single goal position in (0,0) and none anywhere else.
-		List<Position> p1Positions = new ArrayList<Position>();
-		List<Position> p2Positions = new ArrayList<Position>();
-		p1Positions.add(new Position(1,1));
-		p2Positions.add(new Position(0,1));
-		goalPositionsPerPlayer.add(p1Positions);
-		goalPositionsPerPlayer.add(p2Positions);
+		Map<Position, Double> p1PositionRewards = new HashMap<Position, Double>();
+		Map<Position, Double> p2PositionRewards = new HashMap<Position, Double>();
+		p1PositionRewards.put(new Position(1,1), 100.0);
+		p2PositionRewards.put(new Position(0,1), 100.0);
+		goalPositionsAndRewardsPerPlayer.add(p1PositionRewards);
+		goalPositionsAndRewardsPerPlayer.add(p2PositionRewards);
 		
 		initialPositions = new Joint<Position>();
 		initialPositions.add(new Position(0,0));
@@ -254,8 +315,8 @@ public class SimpleBoard implements Board {
 
 	@Override
 	public double getGoalReward(Position playerPosition, Integer playerIdx) {
-		if(goalPositionsPerPlayer.getForPlayer(playerIdx).contains(playerPosition)) {
-			return goalReward;
+		if(goalPositionsAndRewardsPerPlayer.getForPlayer(playerIdx).containsKey(playerPosition)) {
+			return goalPositionsAndRewardsPerPlayer.getForPlayer(playerIdx).get(playerPosition);
 		}
 		return 0;
 	}
@@ -373,7 +434,7 @@ public class SimpleBoard implements Board {
 
 	@Override
 	public boolean hasGoalForPlayer(Position playerPosition, Integer playerIdx) {
-		return (goalPositionsPerPlayer.get(playerIdx).contains(playerPosition));
+		return (goalPositionsAndRewardsPerPlayer.get(playerIdx).containsKey(playerPosition));
 	}
 
 
