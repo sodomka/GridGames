@@ -17,6 +17,19 @@
 	
 \end{tabular}
 
+\vspace{10mm}
+
+\begin{tabular}{||c||c|c||c|c||c|c||}
+	\hline
+	Grid Games&  \multicolumn{2}{|c||}{GG1} &
+	 \multicolumn{2}{|c||}{GG2}  & \multicolumn{2}{|c||}{GG3}  \\ \hline
+	Algorithm & Score & Games & Score & Games & Score & Games \\ \hline \hline
+	Q (Nash) & 99.6, 99.6 & 2500 & 49.8, 49.8 & 2500 & 48.9, 50.7 & 3333 \\ \hline
+	uCE-Q & 99.6, 99.6 & 2500 & 49.8, 49.8 & 2500 & 49.8, 49.7 & 3333 \\ \hline
+	Coco & 99.6, 99.6 & 2500 & 59.3, 40.3 (40.3) & 2500 & 59.3, 40.3(40.3) & 3333 \\ \hline
+	
+\end{tabular}
+
 \section{Convergence}
 \includegraphics[height=90mm]{text/plot.pdf}
 
@@ -29,12 +42,12 @@
 	Solution Concept&  \multicolumn{3}{|c||}{Nash} \\ \hline
 	Game & Avg Reward & Deterministic? & steps converge:  \\ \hline \hline
 	GG1 & 99.6, 299.6 & no & N/A  \\ \hline
-	GG2 & 152.8, 48.8 & yes & 3  \\ \hline
-	GG3 & Reward & yes & 3 \\ \hline
-	GG4 & 99.8, 0 & no & 7 \\ \hline
-	GG5 & 99.7, 299.6 & no & 8 \\ \hline
-	GG6 & 99.7, 299.6 & no & 17 \\ \hline
-	GG7 & -- & -- & -- \\ \hline
+	GG2 & 152.8, 48.8 & yes & 4  \\ \hline
+	GG3 & Reward & yes & 4 \\ \hline
+	GG4 & 99.8, 0 & no & 8 \\ \hline
+	GG5 & 99.7, 299.6 & no & 9 \\ \hline
+	GG6 & 99.7, 299.6 & no & 10 \\ \hline
+	GG7 & 189.8, 79.7 & no & N/A \\ \hline
 \end{tabular}
 
 \vspace{10mm}
@@ -43,13 +56,13 @@
 	\hline
 	Solution Concept& \multicolumn{4}{|c||}{Coco}  \\ \hline
 	Game & Avg Reward & xfer payments & steps converge: & Deterministic? \\ \hline \hline
-	GG1 & 192, 207 & 93 & 4 & yes\\ \hline
-	GG2 & 218.8, 80.8 & 80.8 & 3 & yes\\ \hline
-	GG3 & 218.8, 80.8 & 80.8 & 4 & yes \\ \hline
-	GG4 & 224.4, 175 & 124.5. & 8 & yes \\ \hline
-	GG5 & 172.1, 227.2 & 72.4 & 5 & yes\\ \hline
-	GG6 & 172.5, 226.7 & 72.8 & 5 & yes\\ \hline
-	GG7 & 270, 130 & [0, 150) & 7 & yes\\ \hline
+	GG1 & 192, 207 & 93 & 5 & yes\\ \hline
+	GG2 & 218.8, 80.8 & 80.8 & 4 & yes\\ \hline
+	GG3 & 218.8, 80.8 & 80.8 & 5 & yes \\ \hline
+	GG4 & 224.4, 175 & 124.5. & 9 & yes \\ \hline
+	GG5 & 172.1, 227.2 & 72.4 & 6 & yes\\ \hline
+	GG6 & 172.5, 226.7 & 72.8 & 6 & yes\\ \hline
+	GG7 & 270, 130 & [0, 150) & 8 & yes\\ \hline
 	
 	
 \end{tabular}
@@ -60,13 +73,13 @@
 	\hline
 	Solution Concept&  \multicolumn{3}{|c||}{Correlated U}\\ \hline
 	Game & Avg Reward & Deterministic? & steps converge:\\ \hline \hline
-	GG1 & 99.6, 299.6 & no & 10 \\ \hline
-	GG2 & Reward & yes & 3\\ \hline
-	GG3 & 146.8, 50.7 & yes & 3\\ \hline
-	GG4 & 99.8, 0 & no & 8 \\ \hline
-	GG5 & 99.7, 299.6 & no & 8 \\ \hline
-	GG6 & 99.6, 299.5 & no & 15 \\ \hline
-	GG7 & 188.8, 61.8 & yes & 10 \\ \hline
+	GG1 & 99.6, 299.6 & no & 11 \\ \hline
+	GG2 & 144.1, 51.7 & yes & 4\\ \hline
+	GG3 & 146.8, 50.7 & yes & 4\\ \hline
+	GG4 & 99.8, 0 & no & 9 \\ \hline
+	GG5 & 99.7, 299.6 & no & 9 \\ \hline
+	GG6 & 99.6, 299.5 & no & 10 \\ \hline
+	GG7 & 188.8, 61.8 & yes & 11 \\ \hline
 	
 	
 \end{tabular}

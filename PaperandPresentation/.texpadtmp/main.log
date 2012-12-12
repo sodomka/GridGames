@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  12 DEC 2012 11:04
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  12 DEC 2012 13:28
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -274,15 +274,15 @@ Package pdftex.def Info: text/pic_CEQ.pdf used on input line 2.
 <text/plot.pdf, id=12, 505.89pt x 505.89pt>
 File: text/plot.pdf Graphic file (type pdf)
  <use text/plot.pdf>
-Package pdftex.def Info: text/plot.pdf used on input line 21.
+Package pdftex.def Info: text/plot.pdf used on input line 34.
 (pdftex.def)             Requested size: 256.07838pt x 256.0748pt.
-
-<text/games.pdf, id=13, 800.51894pt x 697.358pt>
+ [2 <./text/pic_CEQ.pdf>] <text/games.pdf, id=4295, 800.51894pt x 697.358pt>
 File: text/games.pdf Graphic file (type pdf)
- <use text/games.pdf>
-Package pdftex.def Info: text/games.pdf used on input line 24.
+
+<use text/games.pdf>
+Package pdftex.def Info: text/games.pdf used on input line 37.
 (pdftex.def)             Requested size: 293.95204pt x 256.0748pt.
- [2 <./text/pic_CEQ.pdf> <./text/plot.pdf>]) [3 <./text/games.pdf>] [4]
+ [3 <./text/plot.pdf> <./text/games.pdf>]) [4]
 (/Users/ehilliard/workspace/GridGames/PaperandPresentation/.texpadtmp/main.bbl)
 [5]
 (/Users/ehilliard/workspace/GridGames/PaperandPresentation/.texpadtmp/main.aux)
@@ -304,7 +304,7 @@ local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/loc
 al/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
 l/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
 Output written on /Users/ehilliard/workspace/GridGames/PaperandPresentation/.te
-xpadtmp/main.pdf (5 pages, 1117376 bytes).
+xpadtmp/main.pdf (5 pages, 1117919 bytes).
 PDF statistics:
  4457 PDF objects out of 5155 (max. 8388607)
  2267 compressed objects within 23 object streams
