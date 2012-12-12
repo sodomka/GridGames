@@ -103,20 +103,19 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 		//until the end of the game, agents take actions
 		while(!game.isTerminalState(state) && iteration<numIterations){
 			System.out.println("First "+state);
-			System.out.println(transfers.get(state));
 			actionToPlay = samplePolicy(state);
 			transitionProb = game.getTransitionProbabilities(state, actionToPlay);
 			nextState = sampleResultingState(transitionProb);
 			Joint<Double> rewardsTemp = game.getImmediateRewards(state, actionToPlay, nextState);
 			Joint<Double> payoffsTemp = transfers.get(state);
-			
+			System.out.println("Payoffs this State: "+payoffsTemp);
 			for(int i =0;i<rewards.size();i++){
 				rewards.set(i, rewards.get(i)+rewardsTemp.get(i));
-				payoffs.set(i, rewards.get(i)+payoffsTemp.get(i));
+				payoffs.set(i, payoffs.get(i)+payoffsTemp.get(i));
 				//System.out.println("up: "+ rewards.get(i));
 				//System.out.println("up2:"+payoffsTemp.get(i));
 			}
-			System.out.println(payoffs);
+			
 			state = nextState;
 			System.out.println("Next "+state);
 			
@@ -133,7 +132,15 @@ public class Simulator<S extends AbstractState, A extends AbstractAction>{
 			System.out.print(" ");
 		}
 		System.out.println();
-		return rewards;
+		
+		Joint<Double> finalValues= new Joint<Double>();
+		for (int playerIdx=0; playerIdx<game.getNumPlayers(); playerIdx++) {
+			finalValues.add(0.0);
+		}
+		for(int i =0;i<rewards.size();i++){
+			finalValues.set(i, rewards.get(i)+payoffs.get(i));
+		}
+		return finalValues;
 	}
 	
 	//samples from a dist. of policies over states

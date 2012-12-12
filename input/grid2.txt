@@ -5,4 +5,4 @@ END
 stepcost:-0.1
 A:start_0=True;wall_up=0.5
 B:start_1=True;wall_up=0.5
-G:goal_0=100.0;goal_1=100.0
+G:goal_0=300.0;goal_1=100.0
