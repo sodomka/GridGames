@@ -14,6 +14,7 @@ import sequentialgame.grid.GridState;
 import sequentialgame.grid.SimpleBoard;
 import sequentialsimulator.Simulator;
 import normalformsolver.BimatrixCocoSolver;
+import normalformsolver.BimatrixCorrelatedEqmSolver;
 import normalformsolver.BimatrixHuSolver;
 import normalformsolver.NormalFormSolver;
 
@@ -29,11 +30,12 @@ public class SolverRunner {
 	public static void main(String[] args) {
 		int numIterations = 100;
 		//NormalFormSolver<GridAction> normalFormSolver = new BimatrixHuSolver<GridAction>();
-		NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
+		//NormalFormSolver<GridAction> normalFormSolver = new BimatrixCocoSolver<GridAction>();
+		NormalFormSolver<GridAction> normalFormSolver = new BimatrixCorrelatedEqmSolver<GridAction>();
 		double gamma = .8;
 		MultiAgentValueIteration<GridState,GridAction> valueIteration = new MultiAgentValueIteration<GridState,GridAction>(numIterations, normalFormSolver, gamma);
 
-		String filename = "./input/game6.txt";
+		String filename = "./input/grid2.txt";
 		SimpleBoard board = new SimpleBoard(filename);
 		//Board board = new SimpleBoard(2, 2);
 		int numPlayers = 2;
