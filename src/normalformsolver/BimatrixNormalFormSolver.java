@@ -61,6 +61,22 @@ public abstract class BimatrixNormalFormSolver<A extends AbstractAction> impleme
 		return solution;
 	}
 	
+	
+	public static double[][] getDistributionOverJointActions(double[] player1Mix, double[] player2Mix) {
+		int numPlayer1Actions = player1Mix.length; 
+		int numPlayer2Actions = player2Mix.length;
+		double[][] jointActionDistribution = new double[numPlayer1Actions][numPlayer2Actions];
+		for (int action1Idx=0; action1Idx<numPlayer1Actions; action1Idx++) {
+			for (int action2Idx=0; action2Idx<numPlayer2Actions; action2Idx++) {
+				double probAction1 = player1Mix[action1Idx];
+				double probAction2 = player2Mix[action2Idx];
+				jointActionDistribution[action1Idx][action2Idx] = probAction1 * probAction2; 
+			}
+		}
+		return jointActionDistribution;
+	}
+	
+	
 	/**
 	 * Given payoffs for player 1 and 2, return the joint over outcomes.
 	 * @param player1Payoffs
